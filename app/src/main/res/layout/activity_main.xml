@@ -28,6 +28,7 @@
     <Button
         android:id="@+id/button_config"
         style="@style/ButtonStyle.Alternative"
+        android:onClick="throwPreferencesActivity"
         android:text="@string/button_config"
         tools:text="@string/button_config" />
 

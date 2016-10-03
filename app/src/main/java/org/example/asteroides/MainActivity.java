@@ -34,15 +34,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void throwAboutActivity(View view) {
-        Intent intent = new Intent(this, AboutActivity.class);
-        startActivity(intent);
-    }
-
-    public void exitApplication() {
-        finish();
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -53,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            throwPreferencesActivity(null);
             return true;
         }
         if (id == R.id.about_menu) {
@@ -60,5 +52,19 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void throwAboutActivity(View view) {
+        Intent intent = new Intent(this, AboutActivity.class);
+        startActivity(intent);
+    }
+
+    public void throwPreferencesActivity(View view) {
+        Intent intent = new Intent(this, Preferences.class);
+        startActivity(intent);
+    }
+
+    public void exitApplication() {
+        finish();
     }
 }
