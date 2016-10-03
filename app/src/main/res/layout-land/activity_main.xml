@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_buttons">
+
+    <TextView
+        android:id="@+id/game_title_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/app_name"
+        android:textAppearance="?android:textAppearanceLarge" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:stretchColumns="*">
+
+        <TableRow android:layout_width="match_parent">
+
+            <Button
+                android:id="@+id/button_play"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/button_play"
+                tools:text="@string/button_play" />
+
+            <Button
+                android:id="@+id/button_config"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/button_config"
+                tools:text="@string/button_config" />
+        </TableRow>
+
+        <TableRow>
+
+            <Button
+                android:id="@+id/button_about"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/button_about"
+                tools:text="@string/button_about" />
+
+            <Button
+                android:id="@+id/button_exit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/button_exit"
+                tools:text="@string/button_exit" />
+        </TableRow>
+    </TableLayout>
+</LinearLayout>
