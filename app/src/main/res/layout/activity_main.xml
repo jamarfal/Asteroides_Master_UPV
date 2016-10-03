@@ -37,7 +37,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_about"
-        tools:text="@string/button_about" />
+        tools:text="@string/button_about"
+        android:onClick="throwAboutActivity" />
 
     <Button
         android:id="@+id/button_exit"
