@@ -10,4 +10,6 @@
     <string name="about_text">Este programa ha sido desarrollado como ejemplo en el curso de
 Android para demostrar cómo se pueden lanzar nuevas actividades desde la actividad
 principal.</string>
+    <string name="preferences_button_menu">Preferencias</string>
+    <string name="about_button_menu">Acerca de...</string>
 </resources>
