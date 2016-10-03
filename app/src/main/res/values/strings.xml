@@ -12,4 +12,6 @@ Android para demostrar cómo se pueden lanzar nuevas actividades desde la activi
 principal.</string>
     <string name="preferences_button_menu">Preferencias</string>
     <string name="about_button_menu">Acerca de...</string>
+    <string name="config_menu_button">Configuración</string>
+    <string name="search_menu_button">Buscar</string>
 </resources>
