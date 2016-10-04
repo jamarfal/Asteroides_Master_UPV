@@ -11,9 +11,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import org.example.asteroides.logic.PointsStorageArray;
+
 public class MainActivity extends AppCompatActivity {
 
-    private Button aboutButton, exitButton;
+    private Button aboutButton, scoreButon;
+    public static PointsStorageArray storageArray = new PointsStorageArray();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,18 +24,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         aboutButton = (Button) findViewById(R.id.button_about);
-        exitButton = (Button) findViewById(R.id.button_exit);
+        scoreButon = (Button) findViewById(R.id.button_score);
         aboutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 throwAboutActivity(null);
-            }
-        });
-
-        exitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                exitApplication();
             }
         });
     }
@@ -64,6 +60,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void throwPreferencesActivity(View view) {
         Intent intent = new Intent(this, Preferences.class);
+        startActivity(intent);
+    }
+
+    public void throwScoreActivity(View view) {
+        Intent intent = new Intent(this, ScoreActivity.class);
         startActivity(intent);
     }
 

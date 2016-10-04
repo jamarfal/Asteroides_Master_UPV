@@ -47,11 +47,12 @@
                 tools:text="@string/button_about" />
 
             <Button
-                android:id="@+id/button_exit"
+                android:id="@+id/button_score"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/button_exit"
-                tools:text="@string/button_exit" />
+                android:text="@string/button_scores"
+                tools:text="@string/button_scores"
+                android:onClick="throwScoreActivity" />
         </TableRow>
     </TableLayout>
 </LinearLayout>
