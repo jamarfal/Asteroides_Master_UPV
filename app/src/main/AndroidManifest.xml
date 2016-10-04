@@ -22,7 +22,10 @@
         <activity
             android:name=".Preferences"
             android:label="Preferencias" />
-        <activity android:name=".ScoreActivity"></activity>
+        <activity android:name=".ScoreActivity" />
+        <activity
+            android:name=".GameActivity"
+            android:screenOrientation="landscape"></activity>
     </application>
 
 </manifest>

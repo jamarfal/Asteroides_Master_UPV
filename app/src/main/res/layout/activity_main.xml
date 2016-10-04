@@ -25,7 +25,7 @@
         style="@style/ButtonStyle"
         android:text="@string/button_play"
         tools:text="@string/button_play"
-        android:onClick="showPreferences" />
+        android:onClick="throwGameActivity" />
 
     <Button
         android:id="@+id/button_config"

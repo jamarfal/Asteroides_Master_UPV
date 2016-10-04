@@ -68,6 +68,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void throwGameActivity(View view) {
+        Intent intent = new Intent(this, GameActivity.class);
+        startActivity(intent);
+    }
+
     public void showPreferences(View view) {
         SharedPreferences pref =
                 PreferenceManager.getDefaultSharedPreferences(this);
