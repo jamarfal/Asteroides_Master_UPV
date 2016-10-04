@@ -1,12 +1,15 @@
 package org.example.asteroides;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -62,6 +65,17 @@ public class MainActivity extends AppCompatActivity {
     public void throwPreferencesActivity(View view) {
         Intent intent = new Intent(this, Preferences.class);
         startActivity(intent);
+    }
+
+    public void showPreferences(View view) {
+        SharedPreferences pref =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        String s = "música: " + pref.getBoolean("musica", true)
+                + ", gráficos: " + pref.getString("graficos", "?")
+                + ", Activar Multiplayer: " + pref.getBoolean("activate_multiplayer", false)
+                + ", Máximo número de Jugadores: " + pref.getString("max_num_players", "1")
+                + ", Tipo de conexión: " + pref.getString("conecction_type", "?");
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 
     public void exitApplication() {
