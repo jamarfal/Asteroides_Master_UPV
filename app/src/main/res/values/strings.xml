@@ -33,4 +33,8 @@ principal.</string>
     <string name="title_max_player_preferences">Máximo número de jugadores</string>
     <string name="summary_connection_type_preferences">Tipo de conexión</string>
     <string name="title_connection_type_preferences">Tipo de conexión</string>
+
+
+    <!-- Item List in Score -->
+    <string name="itemscore_icon_contendescription">Imagen de asteroide</string>
 </resources>

@@ -12,8 +12,8 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:src="@drawable/asteroide"
-        />
+        android:contentDescription="@string/itemscore_icon_contendescription"
+        android:src="@drawable/asteroide" />
 
     <TextView
         android:id="@+id/title_text_view"
@@ -35,5 +35,5 @@
         android:layout_toEndOf="@id/icon"
         android:layout_toRightOf="@id/icon"
         android:gravity="center"
-        android:text="Otro Texto" />
+        tools:text="Otro Texto" />
 </RelativeLayout>
