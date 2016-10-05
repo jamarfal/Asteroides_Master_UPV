@@ -1,7 +1,9 @@
-package org.example.asteroides;
+package org.example.asteroides.fragment;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+
+import org.example.asteroides.R;
 
 /**
  * Created by jamarfal on 3/10/16.

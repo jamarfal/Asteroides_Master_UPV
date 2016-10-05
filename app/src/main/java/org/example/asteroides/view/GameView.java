@@ -1,4 +1,4 @@
-package org.example.asteroides;
+package org.example.asteroides.view;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.View;
 
+import org.example.asteroides.R;
 import org.example.asteroides.logic.GraphicGame;
 
 import java.util.Vector;

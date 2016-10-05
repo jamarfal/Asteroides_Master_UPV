@@ -1,8 +1,9 @@
 package org.example.asteroides;
 
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
 import android.support.v7.app.AppCompatActivity;
+
+import org.example.asteroides.fragment.PreferencesFragment;
 
 /**
  * Created by jamarfal on 3/10/16.

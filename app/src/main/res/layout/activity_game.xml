@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <org.example.asteroides.GameView
+    <org.example.asteroides.view.GameView
         android:id="@+id/VistaJuego"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
