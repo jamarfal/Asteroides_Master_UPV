@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         aboutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                aboutButton.startAnimation(rotateAndZoom);
                 throwAboutActivity(null);
             }
         });
@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void throwAboutActivity(View view) {
-        aboutButton.startAnimation(rotateAndZoom);
         Intent intent = new Intent(this, AboutActivity.class);
         startActivity(intent);
     }

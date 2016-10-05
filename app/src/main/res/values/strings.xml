@@ -12,11 +12,25 @@
     <string name="about_text">Este programa ha sido desarrollado como ejemplo en el curso de
 Android para demostrar cómo se pueden lanzar nuevas actividades desde la actividad
 principal.</string>
+
+    <!-- Button text Menu -->
     <string name="preferences_button_menu">Preferencias</string>
     <string name="about_button_menu">Acerca de...</string>
     <string name="config_menu_button">Configuración</string>
     <string name="search_menu_button">Buscar</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Preferences Text -->
+    <string name="summary_music_preferences">Se reproduce música de fondo</string>
+    <string name="title_music_preferences">Reproducir música</string>
+    <string name="summary_graphics_preferences">Se escoge la representación de gráficos</string>
+    <string name="title_graphic_preferences">Tipo de gráficos</string>
+    <string name="summary_asteroid_fragments_preferences">En cuantos trozos se divide un asteroide</string>
+    <string name="title_asteroid_fragments_preferences">Número de Fragmentos</string>
+    <string name="multiplayer_category_title_preference">Modo Multijugador</string>
+    <string name="summary_activate_multiplayer_preferences">Activar el modo multijugador</string>
+    <string name="title_activate_multiplayer_preferences">Activar modo multijugador</string>
+    <string name="summary_max_players_preferences">Máximo número de jugadores</string>
+    <string name="title_max_player_preferences">Máximo número de jugadores</string>
+    <string name="summary_connection_type_preferences">Tipo de conexión</string>
+    <string name="title_connection_type_preferences">Tipo de conexión</string>
 </resources>
