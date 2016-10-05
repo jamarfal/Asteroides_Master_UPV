@@ -1,8 +1,40 @@
 <resources>
     <string name="app_name">Asteroids</string>
 
+    <!-- Main Activity -->
     <string name="button_play">Play</string>
     <string name="button_config">Config</string>
     <string name="button_about">About</string>
     <string name="button_exit">Exit</string>
+
+
+    <!-- About Activity -->
+    <string name="about_text">This program has been developed as an example in the course of
+Android to demonstrate how you can launch new activities from the main activity.</string>
+
+    <!-- Button text Menu -->
+    <string name="preferences_button_menu">Preferences</string>
+    <string name="about_button_menu">About</string>
+    <string name="config_menu_button">Settings</string>
+    <string name="preferences_info_button">Selected preferences</string>
+
+    <!-- Preferences Text -->
+    <string name="summary_music_preferences">It plays background music</string>
+    <string name="title_music_preferences">Play music</string>
+    <string name="summary_graphics_preferences">It is chosen graphics rendering</string>
+    <string name="title_graphic_preferences">Graphics Type</string>
+    <string name="summary_asteroid_fragments_preferences">How many fragments it will divide an asteroid</string>
+    <string name="title_asteroid_fragments_preferences">Fragments number</string>
+    <string name="multiplayer_category_title_preference">Multiplayer</string>
+    <string name="summary_activate_multiplayer_preferences">Activate multiplayer</string>
+    <string name="title_activate_multiplayer_preferences">Activate multiplayer</string>
+    <string name="summary_max_players_preferences">Max number players</string>
+    <string name="title_max_player_preferences">Max number players</string>
+    <string name="summary_connection_type_preferences">Connection type</string>
+    <string name="title_connection_type_preferences">Connection type</string>
+
+
+    <!-- Item List in Score -->
+    <string name="itemscore_icon_contendescription">Asteroid image</string>
 </resources>
+
