@@ -8,6 +8,7 @@
     <string name="button_exit">Salir</string>
 
 
+    <!-- About Activity -->
     <string name="about_text">Este programa ha sido desarrollado como ejemplo en el curso de
 Android para demostrar cómo se pueden lanzar nuevas actividades desde la actividad
 principal.</string>
