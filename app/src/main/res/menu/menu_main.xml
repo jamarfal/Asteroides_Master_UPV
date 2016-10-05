@@ -15,9 +15,9 @@
         android:title="@string/about_button_menu"
         app:showAsAction="ifRoom|withText" />
     <item
-        android:id="@+id/search_menu"
-        android:icon="@android:drawable/ic_menu_search"
+        android:id="@+id/info_preferences"
+        android:icon="@android:drawable/ic_menu_manage"
         android:orderInCategory="115"
-        android:title="@string/search_menu_button"
+        android:title="@string/preferences_info_button"
         app:showAsAction="always|collapseActionView" />
 </menu>

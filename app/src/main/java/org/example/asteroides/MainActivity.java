@@ -69,6 +69,11 @@ public class MainActivity extends AppCompatActivity {
             throwAboutActivity(null);
             return true;
         }
+
+        if (id == R.id.info_preferences) {
+            showPreferences();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -92,14 +97,15 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void showPreferences(View view) {
+    public void showPreferences() {
         SharedPreferences pref =
                 PreferenceManager.getDefaultSharedPreferences(this);
-        String s = "música: " + pref.getBoolean("musica", true)
-                + ", gráficos: " + pref.getString("graficos", "?")
-                + ", Activar Multiplayer: " + pref.getBoolean("activate_multiplayer", false)
-                + ", Máximo número de Jugadores: " + pref.getString("max_num_players", "1")
-                + ", Tipo de conexión: " + pref.getString("conecction_type", "?");
+        String s = " Música: " + pref.getBoolean("music", true)
+                + "\n Gráficos: " + pref.getString("graphics", "1")
+                + "\n Fragmentos: " + pref.getString("asteroid_fragments", "3")
+                + "\n Activar Multiplayer: " + pref.getBoolean("activate_multiplayer", false)
+                + "\n Máximo número de Jugadores: " + pref.getString("max_num_players", "1")
+                + "\n Tipo de conexión: " + pref.getString("connection_type", "1");
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 

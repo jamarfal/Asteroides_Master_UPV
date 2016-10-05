@@ -4,7 +4,8 @@
     <CheckBoxPreference
         android:key="music"
         android:summary="@string/summary_music_preferences"
-        android:title="@string/title_music_preferences" />
+        android:title="@string/title_music_preferences"
+        android:defaultValue="true"/>
     <ListPreference
         android:defaultValue="1"
         android:entries="@array/graphicTypes"

@@ -17,7 +17,7 @@ principal.</string>
     <string name="preferences_button_menu">Preferencias</string>
     <string name="about_button_menu">Acerca de...</string>
     <string name="config_menu_button">Configuración</string>
-    <string name="search_menu_button">Buscar</string>
+    <string name="preferences_info_button">Preferencias seleccionadas</string>
 
     <!-- Preferences Text -->
     <string name="summary_music_preferences">Se reproduce música de fondo</string>
