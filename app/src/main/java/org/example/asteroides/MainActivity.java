@@ -18,8 +18,9 @@ import org.example.asteroides.logic.PointsStorageArray;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button aboutButton, scoreButon;
+    private Button aboutButton, scoreButon, playButton, configButton;
     private TextView gameTitleTextView;
+    Animation rotateAndZoom;
     public static PointsStorageArray storageArray = new PointsStorageArray();
 
     @Override
@@ -29,15 +30,26 @@ public class MainActivity extends AppCompatActivity {
 
         aboutButton = (Button) findViewById(R.id.button_about);
         scoreButon = (Button) findViewById(R.id.button_score);
+        playButton = (Button) findViewById(R.id.button_play);
+        configButton = (Button) findViewById(R.id.button_config);
         aboutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 throwAboutActivity(null);
             }
         });
         gameTitleTextView = (TextView) findViewById(R.id.game_title_text_view);
-        Animation rotateAndZoom = AnimationUtils.loadAnimation(this, R.anim.rotation_with_zoom);
+        rotateAndZoom = AnimationUtils.loadAnimation(this, R.anim.rotation_with_zoom);
+        Animation appear = AnimationUtils.loadAnimation(this, R.anim.appear);
+        Animation translationRight = AnimationUtils.loadAnimation(this, R.anim.translate_right);
+        Animation translationLeft = AnimationUtils.loadAnimation(this, R.anim.translate_left);
+        Animation zoomMaxMin = AnimationUtils.loadAnimation(this, R.anim.zoom_max_min);
         gameTitleTextView.startAnimation(rotateAndZoom);
+        playButton.startAnimation(appear);
+        configButton.startAnimation(translationRight);
+        aboutButton.startAnimation(zoomMaxMin);
+        scoreButon.startAnimation(translationLeft);
     }
 
 
@@ -61,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void throwAboutActivity(View view) {
+        aboutButton.startAnimation(rotateAndZoom);
         Intent intent = new Intent(this, AboutActivity.class);
         startActivity(intent);
     }
