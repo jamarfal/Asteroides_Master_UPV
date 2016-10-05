@@ -12,6 +12,10 @@ public class PointsStorageArray implements PointsStorage {
 
     public PointsStorageArray() {
         this.scores = new Vector<String>();
+        addDumpData();
+    }
+
+    private void addDumpData() {
         this.scores.add("123000 Pepito Domingez");
         this.scores.add("111000 Pedro Martinez");
         this.scores.add("011000 Paco Pérez");
