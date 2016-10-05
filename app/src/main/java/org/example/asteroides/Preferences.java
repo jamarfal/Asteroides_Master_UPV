@@ -10,6 +10,14 @@ import org.example.asteroides.fragment.PreferencesFragment;
  */
 
 public class Preferences extends AppCompatActivity {
+
+    public final static String KEY_MUSIC = "music";
+    public final static String KEY_GRAPH = "graphics";
+    public final static String KEY_ASTEROID_FRAGMENTS = "asteroid_fragments";
+    public final static String KEY_ACTIVATE_MULTIPLAYER = "activate_multiplayer";
+    public final static String KEY_MAX_NUM_PLAYER = "max_num_players";
+    public final static String KEY_CONNECTION_TYPE = "connection_type";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

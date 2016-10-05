@@ -25,7 +25,8 @@
         <activity android:name=".ScoreActivity" />
         <activity
             android:name=".GameActivity"
-            android:screenOrientation="landscape"></activity>
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
     </application>
 
 </manifest>

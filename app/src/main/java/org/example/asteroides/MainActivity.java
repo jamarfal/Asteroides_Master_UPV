@@ -100,12 +100,12 @@ public class MainActivity extends AppCompatActivity {
     public void showPreferences() {
         SharedPreferences pref =
                 PreferenceManager.getDefaultSharedPreferences(this);
-        String s = " Música: " + pref.getBoolean("music", true)
-                + "\n Gráficos: " + pref.getString("graphics", "1")
-                + "\n Fragmentos: " + pref.getString("asteroid_fragments", "3")
-                + "\n Activar Multiplayer: " + pref.getBoolean("activate_multiplayer", false)
-                + "\n Máximo número de Jugadores: " + pref.getString("max_num_players", "1")
-                + "\n Tipo de conexión: " + pref.getString("connection_type", "1");
+        String s = " Música: " + pref.getBoolean(Preferences.KEY_MUSIC, true)
+                + "\n Gráficos: " + pref.getString(Preferences.KEY_GRAPH, "1")
+                + "\n Fragmentos: " + pref.getString(Preferences.KEY_ASTEROID_FRAGMENTS, "3")
+                + "\n Activar Multiplayer: " + pref.getBoolean(Preferences.KEY_ACTIVATE_MULTIPLAYER, false)
+                + "\n Máximo número de Jugadores: " + pref.getString(Preferences.KEY_MAX_NUM_PLAYER, "1")
+                + "\n Tipo de conexión: " + pref.getString(Preferences.KEY_CONNECTION_TYPE, "1");
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 
