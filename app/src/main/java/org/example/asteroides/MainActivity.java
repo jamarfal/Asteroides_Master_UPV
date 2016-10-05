@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Button aboutButton, scoreButon, playButton, configButton;
     private TextView gameTitleTextView;
-    Animation rotateAndZoom;
+    Animation rotateAndZoom, appear, translationRight, translationLeft, zoomMaxMin;
     public static PointsStorageArray storageArray = new PointsStorageArray();
 
     @Override
@@ -28,10 +28,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initViews();
+
+        configOnClickListeners();
+
+        initAnimations();
+
+        startAnimations();
+    }
+
+    private void initViews() {
         aboutButton = (Button) findViewById(R.id.button_about);
         scoreButon = (Button) findViewById(R.id.button_score);
         playButton = (Button) findViewById(R.id.button_play);
         configButton = (Button) findViewById(R.id.button_config);
+        gameTitleTextView = (TextView) findViewById(R.id.game_title_text_view);
+    }
+
+    private void configOnClickListeners() {
         aboutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -39,12 +53,19 @@ public class MainActivity extends AppCompatActivity {
                 throwAboutActivity(null);
             }
         });
-        gameTitleTextView = (TextView) findViewById(R.id.game_title_text_view);
+    }
+
+
+    private void initAnimations() {
         rotateAndZoom = AnimationUtils.loadAnimation(this, R.anim.rotation_with_zoom);
-        Animation appear = AnimationUtils.loadAnimation(this, R.anim.appear);
-        Animation translationRight = AnimationUtils.loadAnimation(this, R.anim.translate_right);
-        Animation translationLeft = AnimationUtils.loadAnimation(this, R.anim.translate_left);
-        Animation zoomMaxMin = AnimationUtils.loadAnimation(this, R.anim.zoom_max_min);
+        appear = AnimationUtils.loadAnimation(this, R.anim.appear);
+        translationRight = AnimationUtils.loadAnimation(this, R.anim.translate_right);
+        translationLeft = AnimationUtils.loadAnimation(this, R.anim.translate_left);
+        zoomMaxMin = AnimationUtils.loadAnimation(this, R.anim.zoom_max_min);
+    }
+
+
+    private void startAnimations() {
         gameTitleTextView.startAnimation(rotateAndZoom);
         playButton.startAnimation(appear);
         configButton.startAnimation(translationRight);
