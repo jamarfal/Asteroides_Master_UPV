@@ -1,4 +1,4 @@
-package org.example.asteroides;
+package org.example.asteroides.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.example.asteroides.R;
 
 import java.util.Vector;
 
