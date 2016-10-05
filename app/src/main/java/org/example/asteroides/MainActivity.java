@@ -8,7 +8,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.example.asteroides.logic.PointsStorageArray;
@@ -16,6 +19,7 @@ import org.example.asteroides.logic.PointsStorageArray;
 public class MainActivity extends AppCompatActivity {
 
     private Button aboutButton, scoreButon;
+    private TextView gameTitleTextView;
     public static PointsStorageArray storageArray = new PointsStorageArray();
 
     @Override
@@ -31,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
                 throwAboutActivity(null);
             }
         });
+        gameTitleTextView = (TextView) findViewById(R.id.game_title_text_view);
+        Animation rotateAndZoom = AnimationUtils.loadAnimation(this, R.anim.rotation_with_zoom);
+        gameTitleTextView.startAnimation(rotateAndZoom);
     }
 
 
