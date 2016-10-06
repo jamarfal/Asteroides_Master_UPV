@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/imageview_main_rotating_asteroid"
+        style="@style/Asteroid_Rotation" />
+
+    <TextView
+        android:id="@+id/game_title_text_view"
+        style="@style/Asteroid_Title" />
+
+
+    <include layout="@layout/activity_main_button_play" />
+
+    <include layout="@layout/activity_main_button_config" />
+
+    <include layout="@layout/activity_main_button_about" />
+
+    <include layout="@layout/activity_main_button_score" />
+
+
+</LinearLayout>

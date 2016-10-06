@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Button xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/button_score"
+    style="@style/Button_Main"
+    android:onClick="throwScoreActivity"
+    android:text="@string/button_scores"
+    tools:text="@string/button_scores" />

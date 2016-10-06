@@ -5,4 +5,8 @@
     <dimen name="margin_buttons">30dp</dimen>
 
     <dimen name="padding_about_text">20dp</dimen>
+
+    <!-- Dimes for MainActivity-->
+    <dimen name="asteroid_rotation_dimen">100dp</dimen>
+    <dimen name="asteroid_title">30sp</dimen>
 </resources>

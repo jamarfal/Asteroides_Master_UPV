@@ -2,6 +2,7 @@ package org.example.asteroides;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.Image;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +22,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Button aboutButton, scoreButon, playButton, configButton;
     private TextView gameTitleTextView;
-    Animation rotateAndZoom, appear, translationRight, translationLeft, zoomMaxMin;
+    private ImageView asteroidInRotation;
+    Animation rotateAndZoom, appear, translationRight, translationLeft, zoomMaxMin, loopRotation;
     public static PointsStorageArray storageArray = new PointsStorageArray();
 
     @Override
@@ -43,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         playButton = (Button) findViewById(R.id.button_play);
         configButton = (Button) findViewById(R.id.button_config);
         gameTitleTextView = (TextView) findViewById(R.id.game_title_text_view);
+        asteroidInRotation = (ImageView) findViewById(R.id.imageview_main_rotating_asteroid);
     }
 
     private void configOnClickListeners() {
@@ -62,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         translationRight = AnimationUtils.loadAnimation(this, R.anim.translate_right);
         translationLeft = AnimationUtils.loadAnimation(this, R.anim.translate_left);
         zoomMaxMin = AnimationUtils.loadAnimation(this, R.anim.zoom_max_min);
+        loopRotation = AnimationUtils.loadAnimation(this, R.anim.loop_rotation);
     }
 
 
@@ -71,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         configButton.startAnimation(translationRight);
         aboutButton.startAnimation(zoomMaxMin);
         scoreButon.startAnimation(translationLeft);
+        asteroidInRotation.startAnimation(loopRotation);
     }
 
 

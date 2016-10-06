@@ -8,11 +8,7 @@
 
     <TextView
         android:id="@+id/game_title_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/app_name"
-        android:textAppearance="?android:textAppearanceLarge" />
+        style="@style/Asteroid_Title" />
 
     <TableLayout
         android:layout_width="match_parent"
@@ -21,38 +17,16 @@
 
         <TableRow android:layout_width="match_parent">
 
-            <Button
-                android:id="@+id/button_play"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/button_play"
-                tools:text="@string/button_play"
-                android:onClick="showPreferences (MainActivity)" />
+            <include layout="@layout/activity_main_button_play" />
 
-            <Button
-                android:id="@+id/button_config"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/button_config"
-                tools:text="@string/button_config" />
+            <include layout="@layout/activity_main_button_config" />
         </TableRow>
 
         <TableRow>
 
-            <Button
-                android:id="@+id/button_about"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/button_about"
-                tools:text="@string/button_about" />
+            <include layout="@layout/activity_main_button_about" />
 
-            <Button
-                android:id="@+id/button_score"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/button_scores"
-                tools:text="@string/button_scores"
-                android:onClick="throwScoreActivity" />
+            <include layout="@layout/activity_main_button_score" />
         </TableRow>
     </TableLayout>
 </LinearLayout>
