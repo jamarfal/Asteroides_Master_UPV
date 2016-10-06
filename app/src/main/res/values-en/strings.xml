@@ -37,5 +37,6 @@ Android to demonstrate how you can launch new activities from the main activity.
 
     <!-- Item List in Score -->
     <string name="itemscore_icon_contendescription">Asteroid image</string>
+    <string name="main_asteroid_rotation">Rotation Asteroid</string>
 </resources>
 

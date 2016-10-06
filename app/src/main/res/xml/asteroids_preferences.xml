@@ -2,10 +2,10 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="main_preferences">
     <CheckBoxPreference
+        android:defaultValue="true"
         android:key="music"
         android:summary="@string/summary_music_preferences"
-        android:title="@string/title_music_preferences"
-        android:defaultValue="true"/>
+        android:title="@string/title_music_preferences" />
     <ListPreference
         android:defaultValue="1"
         android:entries="@array/graphicTypes"
@@ -15,6 +15,7 @@
         android:title="@string/title_graphic_preferences" />
     <EditTextPreference
         android:defaultValue="3"
+        android:inputType="number"
         android:key="asteroid_fragments"
         android:summary="@string/summary_asteroid_fragments_preferences"
         android:title="@string/title_asteroid_fragments_preferences" />
@@ -27,6 +28,7 @@
 
         <EditTextPreference
             android:defaultValue="2"
+            android:inputType="number"
             android:key="max_num_players"
             android:summary="@string/summary_max_players_preferences"
             android:title="@string/title_max_player_preferences" />
