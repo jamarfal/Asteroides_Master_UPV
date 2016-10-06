@@ -31,7 +31,7 @@ public class GameView extends View
     // //// ASTEROIDES //////
     private Vector<GraphicGame> asteroids; // Vector con los Asteroides
     private int numAsteroids = 5; // Número inicial de asteroids
-    private int numFragments = 3; // Fragmentos en que se divide
+    private int numFragments;// Fragmentos en que se divide
     private GraphicGame ship;
     private int turnShip; // Incremento de dirección
     private double shipAcceleration; // aumento de velocidad
@@ -45,6 +45,8 @@ public class GameView extends View
         Drawable drawableShip, drawableAsteroid, drawableMisil;
         SharedPreferences pref = PreferenceManager.
                 getDefaultSharedPreferences(getContext());
+
+        numFragments = tryParseInt(pref.getString(Preferences.KEY_GRAPH, "1"));
 
         if (playerHasSelectedVectorial(pref)) {
             drawableAsteroid = drawPathForAsteroid();
@@ -144,6 +146,15 @@ public class GameView extends View
         dAsteroide.setIntrinsicHeight(50);
         drawableAsteroid = dAsteroide;
         return drawableAsteroid;
+    }
+
+
+    private int tryParseInt(String numberStr) {
+        try {
+            return Integer.parseInt(numberStr);
+        } catch (NumberFormatException exception) {
+            return 0;
+        }
     }
 }
 
