@@ -17,7 +17,9 @@
         <item name="android:text">@string/app_name</item>
         <item name="android:gravity">center</item>
         <item name="android:textSize">@dimen/asteroid_title</item>
+        <item name="android:textColor">@color/orange</item>
     </style>
+
 
     <style name="Asteroid_Rotation">
         <item name="android:layout_width">@dimen/asteroid_rotation_dimen</item>
@@ -26,8 +28,12 @@
         <item name="android:layout_gravity">right</item>
     </style>
 
+    <style name="Asteroid_Rotation.LandScape">
+        <item name="android:layout_gravity">center</item>
+    </style>
 
-    <style name="Button_Main">
+
+    <style name="Button_Main" parent="android:Widget.Button">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>

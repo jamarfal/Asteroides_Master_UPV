@@ -9,4 +9,5 @@
     <!-- Dimes for MainActivity-->
     <dimen name="asteroid_rotation_dimen">100dp</dimen>
     <dimen name="asteroid_title">30sp</dimen>
+    <dimen name="padding_buttons">5dp</dimen>
 </resources>

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/degraded"
     android:padding="@dimen/margin_buttons">
+
 
     <TextView
         android:id="@+id/game_title_text_view"
@@ -12,7 +13,7 @@
 
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:stretchColumns="*">
 
         <TableRow android:layout_width="match_parent">
@@ -29,4 +30,9 @@
             <include layout="@layout/activity_main_button_score" />
         </TableRow>
     </TableLayout>
+
+    <ImageView
+        android:id="@+id/imageview_main_rotating_asteroid"
+        style="@style/Asteroid_Rotation.LandScape"
+        android:contentDescription="@string/main_asteroid_rotation"/>
 </LinearLayout>

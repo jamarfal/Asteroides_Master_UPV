@@ -39,4 +39,5 @@ principal.</string>
 
     <!-- Item List in Score -->
     <string name="itemscore_icon_contendescription">Imagen de asteroide</string>
+    <string name="main_asteroid_rotation">Asteroid en rotación</string>
 </resources>
