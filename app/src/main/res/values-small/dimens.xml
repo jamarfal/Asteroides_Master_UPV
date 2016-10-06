@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="asteroid_rotation_dimen">50dp</dimen>
+    <dimen name="asteroid_title">15sp</dimen>
+    <dimen name="padding_buttons">5dp</dimen>
 </resources>
