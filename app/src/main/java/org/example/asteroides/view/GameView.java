@@ -66,6 +66,11 @@ public class GameView extends View
     protected void onSizeChanged(int ancho, int alto, int ancho_anter,
                                  int alto_anter) {
         super.onSizeChanged(ancho, alto, ancho_anter, alto_anter);
+
+        // Posiciona la nave en el centro de la vista
+        ship.setCenX(ancho / 2);
+        ship.setCenY(alto / 2);
+
         // Una vez que conocemos nuestro ancho y alto.
         for (GraphicGame asteroide : asteroids) {
             do {
@@ -74,9 +79,7 @@ public class GameView extends View
             } while (asteroide.distance(ship) < (ancho + alto) / 5);
         }
 
-        // Posiciona la nave en el centro de la vista
-        ship.setCenX(ancho / 2);
-        ship.setCenY(alto / 2);
+
     }
 
     @Override

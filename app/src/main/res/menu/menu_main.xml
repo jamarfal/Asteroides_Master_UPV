@@ -4,10 +4,10 @@
     tools:context=".MainActivity">
     <item
         android:id="@+id/action_settings"
-        android:icon="@android:drawable/ic_menu_preferences"
-        android:orderInCategory="5"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:orderInCategory="15"
         android:title="@string/config_menu_button"
-        app:showAsAction="never" />
+        app:showAsAction="always|collapseActionView" />
     <item
         android:id="@+id/about_menu"
         android:icon="@android:drawable/ic_menu_info_details"
@@ -16,8 +16,7 @@
         app:showAsAction="ifRoom|withText" />
     <item
         android:id="@+id/info_preferences"
-        android:icon="@android:drawable/ic_menu_manage"
         android:orderInCategory="115"
         android:title="@string/preferences_info_button"
-        app:showAsAction="always|collapseActionView" />
+        app:showAsAction="never" />
 </menu>
