@@ -93,7 +93,7 @@ public class GameView extends View
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected synchronized void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         for (GraphicGame asteroide : asteroids) {
             asteroide.drawGraphic(canvas);
@@ -170,7 +170,7 @@ public class GameView extends View
         }
     }
 
-    protected void updatePhysics() {
+    protected synchronized void updatePhysics() {
 
         long now = System.currentTimeMillis();
 
