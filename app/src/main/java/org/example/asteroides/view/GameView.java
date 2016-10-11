@@ -39,6 +39,13 @@ public class GameView extends View
     // Incremento estándar de giro y aceleración
     private static final int STEP_TURN_SHIP = 5;
     private static final float STEP_ACCELERATION_SHIP = 0.5f;
+    // //// THREAD Y TIEMPO //////
+    // Thread encargado de procesar el juego
+    private GameThread gameThread = new GameThread();
+    // Cada cuanto queremos procesar cambios (ms)
+    private static int PROCESS_PERIOD = 50;
+    // Cuando se realizó el último proceso
+    private long lastProcessTime = 0;
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -78,6 +85,9 @@ public class GameView extends View
                 asteroide.setCenY((int) (Math.random() * alto));
             } while (asteroide.distance(ship) < (ancho + alto) / 5);
         }
+
+        lastProcessTime = System.currentTimeMillis();
+        gameThread.start();
 
 
     }
@@ -157,6 +167,63 @@ public class GameView extends View
             return Integer.parseInt(numberStr);
         } catch (NumberFormatException exception) {
             return 0;
+        }
+    }
+
+    protected void updatePhysics() {
+
+        long now = System.currentTimeMillis();
+
+        // Salir si el período de proceso no se ha cumplido.
+        if (lastProcessTime + PROCESS_PERIOD > now) {
+            return;
+        }
+
+        // Para una ejecución en tiempo real calculamos retardo
+        double retardation = calculateRetardation(now);
+
+        lastProcessTime = now; // Para la próxima vez
+
+        // Actualizamos velocidad y dirección de la nave a partir de
+        // giroNave y aceleracionNave (según la entrada del jugador)
+        updateShipVelocityAndDirection(retardation);
+
+
+        updatePositions(retardation);
+    }
+
+    private void updateShipVelocityAndDirection(double retardation) {
+
+        ship.setAngle((int) (ship.getAngle() + turnShip * retardation));
+
+        double nIncX = ship.getIncX() + shipAcceleration *
+                Math.cos(Math.toRadians(ship.getAngle())) * retardation;
+        double nIncY = ship.getIncY() + shipAcceleration *
+                Math.sin(Math.toRadians(ship.getAngle())) * retardation;
+
+        // Actualizamos si el módulo de la velocidad no excede el máximo
+        if (Math.hypot(nIncX, nIncY) <= MAX_SHIP_VELOCITY) {
+            ship.setIncX(nIncX);
+            ship.setIncY(nIncY);
+        }
+    }
+
+    private void updatePositions(double retardation) {
+        ship.increasePosition(retardation); // Actualizamos posición
+        for (GraphicGame asteroide : asteroids) {
+            asteroide.increasePosition(retardation);
+        }
+    }
+
+    private double calculateRetardation(long now) {
+        return (now - lastProcessTime) / PROCESS_PERIOD;
+    }
+
+    private class GameThread extends Thread {
+
+        @Override
+        public void run() {
+            updatePhysics();
         }
     }
 }
