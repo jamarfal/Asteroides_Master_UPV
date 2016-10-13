@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.View;
 
 import org.example.asteroides.Preferences;
@@ -163,11 +164,13 @@ public class GameView extends View
 
 
     private int tryParseInt(String numberStr) {
+        int number;
         try {
-            return Integer.parseInt(numberStr);
+            number = Integer.parseInt(numberStr);
         } catch (NumberFormatException exception) {
-            return 0;
+            number = 0;
         }
+        return number;
     }
 
     protected synchronized void updatePhysics() {
@@ -217,6 +220,27 @@ public class GameView extends View
 
     private double calculateRetardation(long now) {
         return (now - lastProcessTime) / PROCESS_PERIOD;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        super.onKeyDown(keyCode, event);
+        // Suponemos que vamos a procesar la pulsación
+        boolean procesada = true;
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_DPAD_UP:
+                shipAcceleration = 0;
+                break;
+            case KeyEvent.KEYCODE_DPAD_LEFT:
+            case KeyEvent.KEYCODE_DPAD_RIGHT:
+                turnShip = 0;
+                break;
+            default:
+                // Si estamos aquí, no hay pulsación que nos interese
+                procesada = false;
+                break;
+        }
+        return procesada;
     }
 
     private class GameThread extends Thread {
