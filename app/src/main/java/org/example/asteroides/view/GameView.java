@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 
 import org.example.asteroides.Preferences;
@@ -47,6 +48,8 @@ public class GameView extends View
     private static int PROCESS_PERIOD = 50;
     // Cuando se realizó el último proceso
     private long lastProcessTime = 0;
+    private float mX = 0, mY = 0;
+    private boolean shooting = false;
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -243,11 +246,49 @@ public class GameView extends View
         return procesada;
     }
 
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        super.onTouchEvent(event);
+        float x = event.getX();
+        float y = event.getY();
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                shooting = true;
+                break;
+            case MotionEvent.ACTION_MOVE:
+                float dx = Math.abs(x - mX);
+                float dy = Math.abs(y - mY);
+                if (dy < 6 && dx > 6) {
+                    turnShip = Math.round((x - mX) / 2);
+                    shooting = false;
+                } else if (dx < 6 && dy > 6) {
+                    if (y < mY)
+                        shipAcceleration = Math.round((mY - y) / 25);
+                    shooting = false;
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                turnShip = 0;
+                shipAcceleration = 0;
+                if (shooting) {
+                    //activaMisil();
+                }
+                break;
+        }
+        mX = x;
+        mY = y;
+        return true;
+    }
+
     private class GameThread extends Thread {
 
         @Override
         public void run() {
-            updatePhysics();
+            while (true) {
+                updatePhysics();
+            }
         }
     }
 }
