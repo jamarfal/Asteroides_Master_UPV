@@ -40,4 +40,6 @@ principal.</string>
     <!-- Item List in Score -->
     <string name="itemscore_icon_contendescription">Imagen de asteroide</string>
     <string name="main_asteroid_rotation">Asteroid en rotación</string>
+    <string name="summary_activate_control_sensor_preferences">Activa el control de la nave usando el acelerómetro</string>
+    <string name="title_sensors_preferences">Sensores</string>
 </resources>

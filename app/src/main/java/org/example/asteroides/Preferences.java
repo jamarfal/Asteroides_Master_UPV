@@ -17,6 +17,7 @@ public class Preferences extends AppCompatActivity {
     public final static String KEY_ACTIVATE_MULTIPLAYER = "activate_multiplayer";
     public final static String KEY_MAX_NUM_PLAYER = "max_num_players";
     public final static String KEY_CONNECTION_TYPE = "connection_type";
+    public static final String KEY_SENSOR = "sensor_control";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

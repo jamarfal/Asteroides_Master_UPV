@@ -20,6 +20,12 @@
         android:summary="@string/summary_asteroid_fragments_preferences"
         android:title="@string/title_asteroid_fragments_preferences" />
 
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="sensor_control"
+        android:summary="@string/summary_activate_control_sensor_preferences"
+        android:title="@string/title_sensors_preferences" />
+
     <PreferenceCategory android:title="@string/multiplayer_category_title_preference">
         <CheckBoxPreference
             android:key="activate_multiplayer"

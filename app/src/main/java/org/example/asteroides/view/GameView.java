@@ -14,9 +14,9 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -37,9 +37,9 @@ public class GameView extends View implements SensorEventListener
 {
     // //// ASTEROIDES //////
     private Vector<GraphicGame> asteroids; // Vector con los Asteroides
+    private GraphicGame ship;
     private int numAsteroids = 5; // Número inicial de asteroids
     private int numFragments;// Fragmentos en que se divide
-    private GraphicGame ship;
     private int turnShip; // Incremento de dirección
     private double shipAcceleration; // aumento de velocidad
     private static final int MAX_SHIP_VELOCITY = 20;
@@ -56,6 +56,7 @@ public class GameView extends View implements SensorEventListener
     private float mX = 0, mY = 0;
     private boolean shooting = false;
 
+    //region Constructor
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
         Drawable drawableShip, drawableAsteroid, drawableMisil;
@@ -75,12 +76,17 @@ public class GameView extends View implements SensorEventListener
             setLayerType(View.LAYER_TYPE_HARDWARE, null);
         }
 
-        initOrientationSensor(context);
+        if (playerHasSelectedSensorControl(pref)) {
+            initSensor(context);
+        }
+
 
         initGraphics(drawableShip, drawableAsteroid);
     }
+    //endregion
 
 
+    //region View Methods
     @Override
     protected void onSizeChanged(int ancho, int alto, int ancho_anter,
                                  int alto_anter) {
@@ -113,10 +119,12 @@ public class GameView extends View implements SensorEventListener
 
         ship.drawGraphic(canvas);
     }
+    //endregion
 
-    private void initOrientationSensor(Context context) {
+    //region Accesory Init Methods
+    private void initSensor(Context context) {
         SensorManager sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        List<Sensor> sensorList = sensorManager.getSensorList(Sensor.TYPE_ORIENTATION);
+        List<Sensor> sensorList = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
         if (!sensorList.isEmpty()) {
             Sensor orientationSensor = sensorList.get(0);
             sensorManager.registerListener(this, orientationSensor, SensorManager.SENSOR_DELAY_GAME);
@@ -137,8 +145,13 @@ public class GameView extends View implements SensorEventListener
         }
     }
 
+
     private boolean playerHasSelectedVectorial(SharedPreferences pref) {
         return pref.getString(Preferences.KEY_GRAPH, "1").equals("0");
+    }
+
+    private boolean playerHasSelectedSensorControl(SharedPreferences pref) {
+        return pref.getBoolean(Preferences.KEY_SENSOR, true);
     }
 
     private Drawable drawPathForShip() {
@@ -192,7 +205,9 @@ public class GameView extends View implements SensorEventListener
         }
         return number;
     }
+    //endregion
 
+    //region Physics Methods
     protected synchronized void updatePhysics() {
 
         long now = System.currentTimeMillis();
@@ -241,7 +256,9 @@ public class GameView extends View implements SensorEventListener
     private double calculateRetardation(long now) {
         return (now - lastProcessTime) / PROCESS_PERIOD;
     }
+    //endregion
 
+    //region Keyboard Input
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         super.onKeyDown(keyCode, event);
@@ -262,8 +279,9 @@ public class GameView extends View implements SensorEventListener
         }
         return procesada;
     }
+    //endregion
 
-
+    //region Touch Input
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
@@ -298,17 +316,39 @@ public class GameView extends View implements SensorEventListener
         mY = y;
         return true;
     }
+    //endregion
+
+    //region Sensor Input
+    private float[] lastAcceloremeterValues;
+    static final float ALPHA = 0.3f; // if ALPHA = 1 OR 0, no filter applies.
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        float xValue;
+        float yValue;
+        lastAcceloremeterValues = highPass(event.values.clone(), lastAcceloremeterValues);
 
+        xValue = lastAcceloremeterValues[0];
+        yValue = lastAcceloremeterValues[1];
+        turnShip = (int) yValue * STEP_TURN_SHIP;
+        shipAcceleration = (int) xValue * STEP_ACCELERATION_SHIP;
+    }
+
+    private float[] highPass(float[] input, float[] output) {
+        if (output == null) return input;
+        for (int i = 0; i < input.length; i++) {
+            output[i] = input[i] - (ALPHA * output[i] + (1 - ALPHA) * input[i]);
+        }
+        return output;
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+    //endregion
 
+    //region Inner Class
     private class GameThread extends Thread {
 
         @Override
@@ -318,6 +358,7 @@ public class GameView extends View implements SensorEventListener
             }
         }
     }
+    //endregion
 }
 
 
