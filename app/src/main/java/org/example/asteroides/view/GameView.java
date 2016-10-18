@@ -9,6 +9,10 @@ import android.graphics.Path;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.PathShape;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -21,13 +25,14 @@ import org.example.asteroides.Preferences;
 import org.example.asteroides.R;
 import org.example.asteroides.logic.GraphicGame;
 
+import java.util.List;
 import java.util.Vector;
 
 /**
  * Created by jamarfal on 4/10/16.
  */
 
-public class GameView extends View
+public class GameView extends View implements SensorEventListener
 
 {
     // //// ASTEROIDES //////
@@ -70,8 +75,11 @@ public class GameView extends View
             setLayerType(View.LAYER_TYPE_HARDWARE, null);
         }
 
+        initOrientationSensor(context);
+
         initGraphics(drawableShip, drawableAsteroid);
     }
+
 
     @Override
     protected void onSizeChanged(int ancho, int alto, int ancho_anter,
@@ -104,6 +112,15 @@ public class GameView extends View
         }
 
         ship.drawGraphic(canvas);
+    }
+
+    private void initOrientationSensor(Context context) {
+        SensorManager sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        List<Sensor> sensorList = sensorManager.getSensorList(Sensor.TYPE_ORIENTATION);
+        if (!sensorList.isEmpty()) {
+            Sensor orientationSensor = sensorList.get(0);
+            sensorManager.registerListener(this, orientationSensor, SensorManager.SENSOR_DELAY_GAME);
+        }
     }
 
     private void initGraphics(Drawable drawableShip, Drawable drawableAsteroid) {
@@ -280,6 +297,16 @@ public class GameView extends View
         mX = x;
         mY = y;
         return true;
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 
     private class GameThread extends Thread {

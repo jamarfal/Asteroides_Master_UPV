@@ -10,7 +10,16 @@
     android:padding="@dimen/margin_buttons"
     tools:context="org.example.asteroides.MainActivity">
 
-    <include layout="@layout/menu_main"/>
+    <android.gesture.GestureOverlayView
+        android:id="@+id/gestureoverlayview_main_gestures"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fadeOffset="800"
+        android:gestureStrokeType="multiple">
+
+        <include layout="@layout/menu_main" />
+        
+    </android.gesture.GestureOverlayView>
 
 </LinearLayout>
 
