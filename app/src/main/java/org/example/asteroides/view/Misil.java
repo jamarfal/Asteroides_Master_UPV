@@ -18,6 +18,7 @@ public class Misil {
     public Misil(GraphicGame graphicGame, GraphicGame graphicGameOwner) {
         this.graphicGame = graphicGame;
         this.graphicGameOwner = graphicGameOwner;
+        //
     }
 
     public GraphicGame getGraphicGame() {
