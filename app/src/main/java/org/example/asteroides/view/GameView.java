@@ -23,7 +23,7 @@ import android.view.View;
 
 import org.example.asteroides.Preferences;
 import org.example.asteroides.R;
-import org.example.asteroides.logic.GraphicGame;
+import org.example.asteroides.pool.FxSoundPool;
 import org.example.asteroides.pool.PoolObject;
 
 import java.util.List;
@@ -38,15 +38,11 @@ public class GameView extends View implements SensorEventListener
 {
     // //// ASTEROIDES //////
     private Vector<GraphicGame> asteroids; // Vector con los Asteroides
-    private GraphicGame ship;
     private int numAsteroids = 5; // Número inicial de asteroids
     private int numFragments;// Fragmentos en que se divide
-    private int turnShip; // Incremento de dirección
-    private double shipAcceleration; // aumento de velocidad
-    private static final int MAX_SHIP_VELOCITY = 20;
-    // Incremento estándar de giro y aceleración
-    private static final int STEP_TURN_SHIP = 5;
-    private static final float STEP_ACCELERATION_SHIP = 0.5f;
+    /////// SHIP //////
+    private Ship ship;
+
     // //// THREAD Y TIEMPO //////
     // Thread encargado de procesar el juego
     private GameThread gameThread = new GameThread();
@@ -61,10 +57,14 @@ public class GameView extends View implements SensorEventListener
 //    private Vector<Misil> misiles;
     private PoolObject misilPool;
     private Misil currentMisil;
+    private SensorManager sensorManager;
+    private Sensor orientationSensor;
+    private Context context;
 
     //region Constructor
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.context = context;
         Drawable drawableShip, drawableAsteroid, drawableMisil;
         SharedPreferences pref = PreferenceManager.
                 getDefaultSharedPreferences(getContext());
@@ -91,9 +91,14 @@ public class GameView extends View implements SensorEventListener
 
 
         initGraphics(drawableShip, drawableAsteroid, drawableMisil);
+
     }
     //endregion
 
+
+    public GameThread getGameThread() {
+        return gameThread;
+    }
 
     //region View Methods
     @Override
@@ -102,15 +107,14 @@ public class GameView extends View implements SensorEventListener
         super.onSizeChanged(ancho, alto, ancho_anter, alto_anter);
 
         // Posiciona la nave en el centro de la vista
-        ship.setCenX(ancho / 2);
-        ship.setCenY(alto / 2);
+        ship.positionIn(ancho / 2, alto / 2);
 
         // Una vez que conocemos nuestro ancho y alto.
         for (GraphicGame asteroide : asteroids) {
             do {
                 asteroide.setCenX((int) (Math.random() * ancho));
                 asteroide.setCenY((int) (Math.random() * alto));
-            } while (asteroide.distance(ship) < (ancho + alto) / 5);
+            } while (asteroide.distance(ship.getGraphicGame()) < (ancho + alto) / 5);
         }
 
         lastProcessTime = System.currentTimeMillis();
@@ -123,17 +127,13 @@ public class GameView extends View implements SensorEventListener
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        ship.drawGraphic(canvas);
+        ship.draw(canvas);
 
         synchronized (asteroids) {
             for (GraphicGame asteroide : asteroids) {
                 asteroide.drawGraphic(canvas);
             }
         }
-
-//        if (misil.isActive()) {
-//            misil.draw(canvas);
-//        }
 
         for (Misil misil : misilPool.getObjects()) {
             if (misil.isActive())
@@ -144,16 +144,25 @@ public class GameView extends View implements SensorEventListener
 
     //region Accesory Init Methods
     private void initSensor(Context context) {
-        SensorManager sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         List<Sensor> sensorList = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
         if (!sensorList.isEmpty()) {
-            Sensor orientationSensor = sensorList.get(0);
-            sensorManager.registerListener(this, orientationSensor, SensorManager.SENSOR_DELAY_GAME);
+            orientationSensor = sensorList.get(0);
+            activateSensor();
         }
     }
 
+    public void activateSensor() {
+        sensorManager.registerListener(this, orientationSensor, SensorManager.SENSOR_DELAY_GAME);
+    }
+
+    public void deactivateSensor() {
+        sensorManager.unregisterListener(this);
+    }
+
     private void initGraphics(Drawable drawableShip, Drawable drawableAsteroid, Drawable drawableMisile) {
-        ship = new GraphicGame(this, drawableShip);
+        GraphicGame graphicGameShip = new GraphicGame(this, drawableShip);
+        ship = new Ship(graphicGameShip);
 //        misil = new Misil(new GraphicGame(this, drawableMisile), ship);
 //        misiles = new Vector<>();
         misilPool = new PoolObject();
@@ -260,32 +269,14 @@ public class GameView extends View implements SensorEventListener
 
         lastProcessTime = now; // Para la próxima vez
 
-        // Actualizamos velocidad y dirección de la nave a partir de
-        // giroNave y aceleracionNave (según la entrada del jugador)
-        updateShipVelocityAndDirection(retardation);
-
 
         updatePositions(retardation);
     }
 
-    private void updateShipVelocityAndDirection(double retardation) {
-
-        ship.setAngle((int) (ship.getAngle() + turnShip * retardation));
-
-        double nIncX = ship.getIncX() + shipAcceleration *
-                Math.cos(Math.toRadians(ship.getAngle())) * retardation;
-        double nIncY = ship.getIncY() + shipAcceleration *
-                Math.sin(Math.toRadians(ship.getAngle())) * retardation;
-
-        // Actualizamos si el módulo de la velocidad no excede el máximo
-        if (Math.hypot(nIncX, nIncY) <= MAX_SHIP_VELOCITY) {
-            ship.setIncX(nIncX);
-            ship.setIncY(nIncY);
-        }
-    }
 
     private void updatePositions(double retardation) {
-        ship.increasePosition(retardation); // Actualizamos posición
+        ship.move(retardation);
+
         for (GraphicGame asteroide : asteroids) {
             asteroide.increasePosition(retardation);
         }
@@ -344,6 +335,7 @@ public class GameView extends View implements SensorEventListener
     }
 
     private void destroyAsteroid(int i) {
+        FxSoundPool.getInstance(context).explossion();
         synchronized (asteroids) {
             asteroids.remove(i);
         }
@@ -362,11 +354,11 @@ public class GameView extends View implements SensorEventListener
         boolean procesada = true;
         switch (keyCode) {
             case KeyEvent.KEYCODE_DPAD_UP:
-                shipAcceleration = 0;
+                ship.setShipAcceleration(0);
                 break;
             case KeyEvent.KEYCODE_DPAD_LEFT:
             case KeyEvent.KEYCODE_DPAD_RIGHT:
-                turnShip = 0;
+                ship.setTurnShip(0);
                 break;
             default:
                 // Si estamos aquí, no hay pulsación que nos interese
@@ -392,19 +384,18 @@ public class GameView extends View implements SensorEventListener
                 float dx = Math.abs(x - mX);
                 float dy = Math.abs(y - mY);
                 if (dy < 6 && dx > 6) {
-                    turnShip = Math.round((x - mX) / 2);
+                    ship.setTurnShip(Math.round((x - mX) / 2));
                     shooting = false;
                 } else if (dx < 6 && dy > 6) {
                     if (y < mY)
-                        shipAcceleration = Math.round((mY - y) / 25);
+                        ship.setShipAcceleration(Math.round((mY - y) / 25));
                     shooting = false;
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                turnShip = 0;
-                shipAcceleration = 0;
+                ship.setTurnShip(0);
+                ship.setShipAcceleration(0);
                 if (shooting) {
-
 //                    for (Misil misil : misiles) {
 //                        if (!misil.isActive()) {
 //                            misil.fire();
@@ -415,7 +406,7 @@ public class GameView extends View implements SensorEventListener
 //                            break;
 //                        }
 //                    }
-                    currentMisil = misilPool.get(new GraphicGame(this, ContextCompat.getDrawable(getContext(), R.drawable.misil1)), ship);
+                    currentMisil = misilPool.get(new GraphicGame(this, ContextCompat.getDrawable(getContext(), R.drawable.misil1)), ship.getGraphicGame(), context);
                     if (!currentMisil.isActive()) {
                         currentMisil.fire();
                         int timeMisil = (int) Math.min(this.getWidth() / Math.abs(currentMisil.getGraphicGame().
@@ -446,8 +437,10 @@ public class GameView extends View implements SensorEventListener
 
         xValue = lastAcceloremeterValues[0];
         yValue = lastAcceloremeterValues[1];
-        turnShip = (int) yValue * STEP_TURN_SHIP;
-        shipAcceleration = (int) xValue * STEP_ACCELERATION_SHIP;
+//        turnShip = (int) yValue * STEP_TURN_SHIP;
+//        shipAcceleration = (int) xValue * STEP_ACCELERATION_SHIP;
+        ship.setTurnShip((int) yValue);
+        ship.setShipAcceleration((int) xValue);
     }
 
     private float[] highPass(float[] input, float[] output) {
@@ -465,16 +458,42 @@ public class GameView extends View implements SensorEventListener
     //endregion
 
     //region Inner Class
-    private class GameThread extends Thread {
+    public class GameThread extends Thread {
+        private boolean pause, running;
+
+        public synchronized void pauseThread() {
+            pause = true;
+        }
+
+        public synchronized void resumeThread() {
+            pause = false;
+            notify();
+        }
+
+        public void stopThread() {
+            running = false;
+            if (pause) resumeThread();
+        }
 
         @Override
         public void run() {
-            while (true) {
+            running = true;
+            while (running) {
                 updatePhysics();
+                synchronized (this) {
+                    while (pause) {
+                        try {
+                            wait();
+                        } catch (Exception e) {
+                        }
+                    }
+                }
             }
         }
     }
     //endregion
+
+
 }
 
 

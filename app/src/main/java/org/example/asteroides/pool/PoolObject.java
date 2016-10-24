@@ -1,6 +1,8 @@
 package org.example.asteroides.pool;
 
-import org.example.asteroides.logic.GraphicGame;
+import android.content.Context;
+
+import org.example.asteroides.view.GraphicGame;
 import org.example.asteroides.view.Misil;
 
 import java.util.LinkedList;
@@ -21,10 +23,10 @@ public class PoolObject {
         objectsFree = new Stack<>();
     }
 
-    public Misil get(GraphicGame misilGraphic, GraphicGame ownerGraphic) {
+    public Misil get(GraphicGame misilGraphic, GraphicGame ownerGraphic, Context context) {
         Misil object;
         if (objectsFree.size() <= 0) {
-            object = new Misil(misilGraphic, ownerGraphic);
+            object = new Misil(misilGraphic, ownerGraphic, context);
             objectsInUse.add(object);
         } else {
             object = objectsInUse.get(objectsFree.pop());

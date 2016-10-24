@@ -8,6 +8,7 @@ import android.gesture.GestureLibrary;
 import android.gesture.GestureOverlayView;
 import android.gesture.Prediction;
 import android.media.Image;
+import android.media.MediaPlayer;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements GestureOverlayView.OnGesturePerformedListener {
 
+    public static final String SONG_POSITION_TIME = "song_position_time";
     private Button aboutButton, scoreButon, playButton, configButton;
     private TextView gameTitleTextView;
     private ImageView asteroidInRotation;
@@ -34,11 +36,15 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     Animation rotateAndZoom, appear, translationRight, translationLeft, zoomMaxMin, loopRotation;
     private GestureLibrary gestureLibrary;
     public static PointsStorageArray storageArray = new PointsStorageArray();
+    MediaPlayer mediaPlayer;
 
+
+    //region Life Cycle methods
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toast.makeText(this, "onCreate", Toast.LENGTH_SHORT).show();
 
         initViews();
 
@@ -49,8 +55,71 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
         initAnimations();
 
         startAnimations();
+
+        mediaPlayer = MediaPlayer.create(this, R.raw.audio);
+        mediaPlayer.start();
+
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Toast.makeText(this, "onStart", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Toast.makeText(this, "onResume", Toast.LENGTH_SHORT).show();
+        mediaPlayer.start();
+    }
+
+    @Override
+    protected void onPause() {
+        Toast.makeText(this, "onPause", Toast.LENGTH_SHORT).show();
+        mediaPlayer.pause();
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Toast.makeText(this, "onStop", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Toast.makeText(this, "onRestart", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Toast.makeText(this, "onDestroy", Toast.LENGTH_SHORT).show();
+    }
+    //endregion
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mediaPlayer != null) {
+            int position = mediaPlayer.getCurrentPosition();
+            outState.putInt(SONG_POSITION_TIME, position);
+        }
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null && mediaPlayer != null) {
+            int position = savedInstanceState.getInt(SONG_POSITION_TIME);
+            mediaPlayer.seekTo(position);
+        }
+
+    }
 
     //region Init methods
     private void initViews() {

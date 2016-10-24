@@ -1,4 +1,4 @@
-package org.example.asteroides.logic;
+package org.example.asteroides.view;
 
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
