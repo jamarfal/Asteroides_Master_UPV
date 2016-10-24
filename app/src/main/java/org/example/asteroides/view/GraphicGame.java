@@ -10,10 +10,10 @@ import android.view.View;
 
 public class GraphicGame {
 
-    private Drawable drawable;
-    private int cenX, cenY;
-    private int width, height;
-    private double incX, incY;
+    private Drawable drawable; // Imagen
+    private int cenX, cenY; // Posición del centro del gráfico
+    private int width, height; // Dimensiones
+    private double incX, incY; // Velocidad desplazamiento
     private double angle, rotacion;//Ángulo y velocidad rotación
     private int collisionCollider; //Para determinar colisión
     private int previousXposition, previosYposition; // Posición anterior

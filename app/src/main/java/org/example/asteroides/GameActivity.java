@@ -22,20 +22,20 @@ public class GameActivity extends Activity {
     protected void onPause() {
         super.onPause();
         gameView.getGameThread().pauseThread();
-        gameView.deactivateSensor();
+//        gameView.getSensorController().deactivateSensor();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         gameView.getGameThread().resumeThread();
-        gameView.activateSensor();
+//        gameView.getSensorController().activateSensor();
     }
 
     @Override
     protected void onDestroy() {
         gameView.getGameThread().stopThread();
-        gameView.deactivateSensor();
+//        gameView.getSensorController().deactivateSensor();
         super.onDestroy();
     }
 }

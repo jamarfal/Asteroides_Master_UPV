@@ -7,7 +7,6 @@ import android.gesture.GestureLibraries;
 import android.gesture.GestureLibrary;
 import android.gesture.GestureOverlayView;
 import android.gesture.Prediction;
-import android.media.Image;
 import android.media.MediaPlayer;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.example.asteroides.logic.PointsStorageArray;
+import org.example.asteroides.preferences.GamePreferences;
 
 import java.util.ArrayList;
 
@@ -240,14 +240,13 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
 
     //region Show Preferences Values method
     public void showPreferences() {
-        SharedPreferences pref =
-                PreferenceManager.getDefaultSharedPreferences(this);
-        String s = " Música: " + pref.getBoolean(Preferences.KEY_MUSIC, true)
-                + "\n Gráficos: " + pref.getString(Preferences.KEY_GRAPH, "1")
-                + "\n Fragmentos: " + pref.getString(Preferences.KEY_ASTEROID_FRAGMENTS, "3")
-                + "\n Activar Multiplayer: " + pref.getBoolean(Preferences.KEY_ACTIVATE_MULTIPLAYER, false)
-                + "\n Máximo número de Jugadores: " + pref.getString(Preferences.KEY_MAX_NUM_PLAYER, "1")
-                + "\n Tipo de conexión: " + pref.getString(Preferences.KEY_CONNECTION_TYPE, "1");
+        GamePreferences gamePreferences = new GamePreferences(this);
+        String s = " Música: " + gamePreferences.playMusic()
+                + "\n Gráficos: " + gamePreferences.getGraphicType()
+                + "\n Fragmentos: " + gamePreferences.getNumFragments()
+                + "\n Activar Multiplayer: " + gamePreferences.isMultiplayer()
+                + "\n Máximo número de Jugadores: " + gamePreferences.getMaxNumberPlayer()
+                + "\n Tipo de conexión: " + gamePreferences.getConnectionType();
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
     //endregion

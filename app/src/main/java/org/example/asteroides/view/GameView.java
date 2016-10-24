@@ -1,32 +1,23 @@
 package org.example.asteroides.view;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.PathShape;
-import android.graphics.drawable.shapes.RectShape;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 
-import org.example.asteroides.Preferences;
-import org.example.asteroides.R;
 import org.example.asteroides.pool.FxSoundPool;
-import org.example.asteroides.pool.PoolObject;
+import org.example.asteroides.pool.MisilPool;
+import org.example.asteroides.preferences.GamePreferences;
+import org.example.asteroides.sensor.SensorController;
 
-import java.util.List;
+import java.util.Iterator;
 import java.util.Vector;
 
 /**
@@ -37,84 +28,104 @@ public class GameView extends View implements SensorEventListener
 
 {
     // //// ASTEROIDES //////
-    private Vector<GraphicGame> asteroids; // Vector con los Asteroides
+    private Vector<Asteroid> asteroids; // Vector con los Asteroides
     private int numAsteroids = 5; // Número inicial de asteroids
-    private int numFragments;// Fragmentos en que se divide
     /////// SHIP //////
     private Ship ship;
-
-    // //// THREAD Y TIEMPO //////
-    // Thread encargado de procesar el juego
+    ////// THREAD Y TIEMPO //////
     private GameThread gameThread = new GameThread();
-    // Cada cuanto queremos procesar cambios (ms)
-    private static int PROCESS_PERIOD = 50;
-    // Cuando se realizó el último proceso
-    private long lastProcessTime = 0;
+    private static int PROCESS_PERIOD = 50;    // Cada cuanto queremos procesar cambios (ms)
+    private long lastProcessTime = 0;// Cuando se realizó el último proceso
     private float mX = 0, mY = 0;
     private boolean shooting = false;
-    // //// MISIL //////
-//    private Misil misil;
-//    private Vector<Misil> misiles;
-    private PoolObject misilPool;
+    ////// MISIL //////
+    private MisilPool misilPool;
     private Misil currentMisil;
-    private SensorManager sensorManager;
-    private Sensor orientationSensor;
     private Context context;
+    ////// SENSOR //////
+    private SensorController sensorController;
+    /// PREFERENCES ////
+    private GamePreferences gamePreferences;
+    /// DRAWABLECONTROLLER ///
+    private DrawableController drawableController;
+    ////// DRAWABLES //////
+    private Drawable drawableShip, drawableAsteroid, drawableMisil;
 
     //region Constructor
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
         this.context = context;
-        Drawable drawableShip, drawableAsteroid, drawableMisil;
-        SharedPreferences pref = PreferenceManager.
-                getDefaultSharedPreferences(getContext());
 
+        gamePreferences = new GamePreferences(context);
+        drawableController = new DrawableController(context);
 
-        numFragments = tryParseInt(pref.getString(Preferences.KEY_GRAPH, "1"));
-
-        if (playerHasSelectedVectorial(pref)) {
-            drawableAsteroid = drawPathForAsteroid();
-            drawableShip = drawPathForShip();
-            drawableMisil = drawPathForMisile();
+        if (gamePreferences.playerHasSelectedVectorial()) {
+            drawableAsteroid = drawableController.drawPathForAsteroid();
+            drawableShip = drawableController.drawPathForShip();
+            drawableMisil = drawableController.drawPathForMisile();
             setBackgroundColor(Color.BLACK);
             setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         } else {
-            drawableAsteroid = ContextCompat.getDrawable(context, R.drawable.asteroide1);
-            drawableShip = ContextCompat.getDrawable(context, R.drawable.nave);
-            drawableMisil = ContextCompat.getDrawable(context, R.drawable.misil1);
+            drawableAsteroid = drawableController.getAsteroid();
+            drawableShip = drawableController.getShip();
+            drawableMisil = drawableController.getMisil();
             setLayerType(View.LAYER_TYPE_HARDWARE, null);
         }
 
-        if (playerHasSelectedSensorControl(pref)) {
-            initSensor(context);
+        initGameObjects();
+
+        if (gamePreferences.playerHasSelectedSensorControl()) {
+            sensorController = new SensorController(context, this);
         }
 
-
-        initGraphics(drawableShip, drawableAsteroid, drawableMisil);
 
     }
     //endregion
 
+    //region Accesory Init Methods
+    private void initGameObjects() {
+        GraphicGame graphicGameShip = new GraphicGame(this, drawableShip);
+        ship = new Ship(graphicGameShip);
 
+        asteroids = new Vector<>();
+
+        for (int i = 0; i < numAsteroids; i++) {
+            GraphicGame graphicGameAsteroid = new GraphicGame(this, drawableAsteroid);
+            Asteroid asteroid = new Asteroid(graphicGameAsteroid, gamePreferences.getNumFragments());
+            asteroid.setVelocity((int) (Math.random() * 4 - 2), (int) (Math.random() * 4 - 2));
+            asteroid.setAngle((int) (Math.random() * 360));
+            asteroid.setRotacion((int) (Math.random() * 8 - 4));
+            asteroids.add(asteroid);
+        }
+
+        misilPool = new MisilPool();
+    }
+    //endregion
+
+    //region Getters
     public GameThread getGameThread() {
         return gameThread;
     }
 
+    public SensorController getSensorController() {
+        return sensorController;
+    }
+    //endregion
+
     //region View Methods
     @Override
-    protected void onSizeChanged(int ancho, int alto, int ancho_anter,
-                                 int alto_anter) {
-        super.onSizeChanged(ancho, alto, ancho_anter, alto_anter);
+    protected void onSizeChanged(int width, int height, int previousWidth, int previousHeight) {
+        super.onSizeChanged(width, height, previousWidth, previousHeight);
 
         // Posiciona la nave en el centro de la vista
-        ship.positionIn(ancho / 2, alto / 2);
+        ship.positionIn(width / 2, height / 2);
 
         // Una vez que conocemos nuestro ancho y alto.
-        for (GraphicGame asteroide : asteroids) {
+        for (Asteroid asteroid : asteroids) {
             do {
-                asteroide.setCenX((int) (Math.random() * ancho));
-                asteroide.setCenY((int) (Math.random() * alto));
-            } while (asteroide.distance(ship.getGraphicGame()) < (ancho + alto) / 5);
+                asteroid.positionIn((int) (Math.random() * width), (int) (Math.random() * height));
+            } while (asteroid.distance(ship.getGraphicGame()) < (width + height) / 5);
         }
 
         lastProcessTime = System.currentTimeMillis();
@@ -130,127 +141,16 @@ public class GameView extends View implements SensorEventListener
         ship.draw(canvas);
 
         synchronized (asteroids) {
-            for (GraphicGame asteroide : asteroids) {
-                asteroide.drawGraphic(canvas);
+            for (Asteroid asteroide : asteroids) {
+                asteroide.draw(canvas);
             }
         }
 
-        for (Misil misil : misilPool.getObjects()) {
+        for (int counter = misilPool.getObjects().size() - 1; counter >= 0; counter--) {
+            Misil misil = misilPool.getObjects().get(counter);
             if (misil.isActive())
                 misil.draw(canvas);
         }
-    }
-    //endregion
-
-    //region Accesory Init Methods
-    private void initSensor(Context context) {
-        sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        List<Sensor> sensorList = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
-        if (!sensorList.isEmpty()) {
-            orientationSensor = sensorList.get(0);
-            activateSensor();
-        }
-    }
-
-    public void activateSensor() {
-        sensorManager.registerListener(this, orientationSensor, SensorManager.SENSOR_DELAY_GAME);
-    }
-
-    public void deactivateSensor() {
-        sensorManager.unregisterListener(this);
-    }
-
-    private void initGraphics(Drawable drawableShip, Drawable drawableAsteroid, Drawable drawableMisile) {
-        GraphicGame graphicGameShip = new GraphicGame(this, drawableShip);
-        ship = new Ship(graphicGameShip);
-//        misil = new Misil(new GraphicGame(this, drawableMisile), ship);
-//        misiles = new Vector<>();
-        misilPool = new PoolObject();
-        asteroids = new Vector<GraphicGame>();
-
-        for (int i = 0; i < numAsteroids; i++) {
-            GraphicGame asteroid = new GraphicGame(this, drawableAsteroid);
-            asteroid.setIncY(Math.random() * 4 - 2);
-            asteroid.setIncX(Math.random() * 4 - 2);
-            asteroid.setAngle((int) (Math.random() * 360));
-            asteroid.setRotacion((int) (Math.random() * 8 - 4));
-            asteroids.add(asteroid);
-        }
-
-//        for (int i = 0; i < 5; i++) {
-//            Misil misil = new Misil(new GraphicGame(this, drawableMisile), ship);
-//            misiles.add(misil);
-//        }
-    }
-
-
-    private boolean playerHasSelectedVectorial(SharedPreferences pref) {
-        return pref.getString(Preferences.KEY_GRAPH, "1").equals("0");
-    }
-
-    private boolean playerHasSelectedSensorControl(SharedPreferences pref) {
-        return pref.getBoolean(Preferences.KEY_SENSOR, true);
-    }
-
-    private Drawable drawPathForShip() {
-        Drawable drawableShip;
-        Path pathShip = new Path();
-        pathShip.moveTo(0.0f, 0.0f);
-        pathShip.lineTo(0.0f, 1.0f);
-        pathShip.lineTo(1.0f, .5f);
-        pathShip.lineTo(0.0f, 0.0f);
-        ShapeDrawable shapeDrawableShip = new ShapeDrawable(new PathShape(pathShip, 1, 1));
-        shapeDrawableShip.getPaint().setColor(Color.WHITE);
-        shapeDrawableShip.getPaint().setStyle(Paint.Style.STROKE);
-        shapeDrawableShip.setIntrinsicWidth(20);
-        shapeDrawableShip.setIntrinsicHeight(15);
-        drawableShip = shapeDrawableShip;
-        return drawableShip;
-    }
-
-    private Drawable drawPathForAsteroid() {
-        Drawable drawableAsteroid;
-        Path pathAsteroide = new Path();
-        pathAsteroide.moveTo((float) 0.3, (float) 0.0);
-        pathAsteroide.lineTo((float) 0.6, (float) 0.0);
-        pathAsteroide.lineTo((float) 0.6, (float) 0.3);
-        pathAsteroide.lineTo((float) 0.8, (float) 0.2);
-        pathAsteroide.lineTo((float) 1.0, (float) 0.4);
-        pathAsteroide.lineTo((float) 0.8, (float) 0.6);
-        pathAsteroide.lineTo((float) 0.9, (float) 0.9);
-        pathAsteroide.lineTo((float) 0.8, (float) 1.0);
-        pathAsteroide.lineTo((float) 0.4, (float) 1.0);
-        pathAsteroide.lineTo((float) 0.0, (float) 0.6);
-        pathAsteroide.lineTo((float) 0.0, (float) 0.2);
-        pathAsteroide.lineTo((float) 0.3, (float) 0.0);
-        ShapeDrawable dAsteroide = new ShapeDrawable(
-                new PathShape(pathAsteroide, 1, 1));
-        dAsteroide.getPaint().setColor(Color.WHITE);
-        dAsteroide.getPaint().setStyle(Paint.Style.STROKE);
-        dAsteroide.setIntrinsicWidth(50);
-        dAsteroide.setIntrinsicHeight(50);
-        drawableAsteroid = dAsteroide;
-        return drawableAsteroid;
-    }
-
-    private ShapeDrawable drawPathForMisile() {
-        ShapeDrawable dMisil = new ShapeDrawable(new RectShape());
-        dMisil.getPaint().setColor(Color.WHITE);
-        dMisil.getPaint().setStyle(Paint.Style.STROKE);
-        dMisil.setIntrinsicWidth(15);
-        dMisil.setIntrinsicHeight(3);
-        return dMisil;
-    }
-
-
-    private int tryParseInt(String numberStr) {
-        int number;
-        try {
-            number = Integer.parseInt(numberStr);
-        } catch (NumberFormatException exception) {
-            number = 0;
-        }
-        return number;
     }
     //endregion
 
@@ -275,57 +175,24 @@ public class GameView extends View implements SensorEventListener
 
 
     private void updatePositions(double retardation) {
+
         ship.move(retardation);
 
-        for (GraphicGame asteroide : asteroids) {
-            asteroide.increasePosition(retardation);
+        for (Asteroid asteroide : asteroids) {
+            asteroide.move(retardation);
         }
 
-        // Actualizamos posición de misil
-//        if (misil.isActive()) {
-//            misil.updatePositions(retardation);
-//            int timeMisil = misil.getTimeMisil();
-//            timeMisil -= retardation;
-//            misil.setTimeMisil(timeMisil);
-//            if (misil.getTimeMisil() < 0) {
-//                misil.setActive(false);
-//            } else {
-//                for (int i = 0; i < asteroids.size(); i++)
-//                    if (misil.checkCollision(asteroids.elementAt(i))) {
-//                        destroyAsteroid(i);
-//                        break;
-//                    }
-//            }
-//        }
-//        for (Misil misil : misiles) {
-//            if (misil.isActive()) {
-//                misil.updatePositions(retardation);
-//                int timeMisil = misil.getTimeMisil();
-//                timeMisil -= retardation;
-//                misil.setTimeMisil(timeMisil);
-//                if (misil.getTimeMisil() < 0) {
-//                    misil.setActive(false);
-//                } else {
-//                    for (int i = 0; i < asteroids.size(); i++)
-//                        if (misil.checkCollision(asteroids.elementAt(i))) {
-//                            destroyAsteroid(i);
-//                            break;
-//                        }
-//                }
-//            }
-//        }
 
-        for (Misil misil : misilPool.getObjects()) {
+        for (int counter = misilPool.getObjects().size() - 1; counter >= 0; counter--) {
+            Misil misil = misilPool.getObjects().get(counter);
             if (misil.isActive()) {
-                misil.updatePositions(retardation);
-                int timeMisil = misil.getTimeMisil();
-                timeMisil -= retardation;
-                misil.setTimeMisil(timeMisil);
+                misil.move(retardation);
                 if (misil.getTimeMisil() < 0) {
                     misil.setActive(false);
+                    misilPool.free(misil);
                 } else {
                     for (int i = 0; i < asteroids.size(); i++)
-                        if (misil.checkCollision(asteroids.elementAt(i))) {
+                        if (misil.checkCollision(asteroids.elementAt(i).getGraphicGame())) {
                             destroyAsteroid(i);
                             break;
                         }
@@ -396,32 +263,23 @@ public class GameView extends View implements SensorEventListener
                 ship.setTurnShip(0);
                 ship.setShipAcceleration(0);
                 if (shooting) {
-//                    for (Misil misil : misiles) {
-//                        if (!misil.isActive()) {
-//                            misil.fire();
-//                            int timeMisil = (int) Math.min(this.getWidth() / Math.abs(misil.getGraphicGame().
-//                                    getIncX()), this.getHeight() / Math.abs(misil.getGraphicGame().getIncY())) - 2;
-//                            misil.setTimeMisil(timeMisil);
-//                            misil.setActive(true);
-//                            break;
-//                        }
-//                    }
-                    currentMisil = misilPool.get(new GraphicGame(this, ContextCompat.getDrawable(getContext(), R.drawable.misil1)), ship.getGraphicGame(), context);
+                    currentMisil = getMisilFromPool();
                     if (!currentMisil.isActive()) {
-                        currentMisil.fire();
-                        int timeMisil = (int) Math.min(this.getWidth() / Math.abs(currentMisil.getGraphicGame().
-                                getIncX()), this.getHeight() / Math.abs(currentMisil.getGraphicGame().getIncY())) - 2;
-                        currentMisil.setTimeMisil(timeMisil);
-                        currentMisil.setActive(true);
+                        currentMisil.fire(this.getWidth(), this.getHeight());
+                        FxSoundPool.getInstance(getContext()).misil();
                         break;
                     }
-
                 }
                 break;
         }
         mX = x;
         mY = y;
         return true;
+    }
+
+    private Misil getMisilFromPool() {
+        GraphicGame misilGraphic = new GraphicGame(this, drawableMisil);
+        return misilPool.get(misilGraphic, ship.getGraphicGame());
     }
     //endregion
 
@@ -437,10 +295,8 @@ public class GameView extends View implements SensorEventListener
 
         xValue = lastAcceloremeterValues[0];
         yValue = lastAcceloremeterValues[1];
-//        turnShip = (int) yValue * STEP_TURN_SHIP;
-//        shipAcceleration = (int) xValue * STEP_ACCELERATION_SHIP;
-        ship.setTurnShip((int) yValue);
-        ship.setShipAcceleration((int) xValue);
+        ship.setTurnShip((int) yValue * Ship.STEP_TURN_SHIP);
+        ship.setShipAcceleration((int) xValue * Ship.STEP_ACCELERATION_SHIP);
     }
 
     private float[] highPass(float[] input, float[] output) {

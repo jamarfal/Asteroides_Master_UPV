@@ -5,47 +5,26 @@ import android.graphics.Canvas;
 /**
  * Created by jamarfal on 24/10/16.
  */
+public class Asteroid extends GameObject {
 
-public class Asteroid {
-
-    private GraphicGame graphicGame;
-    private int numFragments;// Fragmentos en que se divide
+    private int numFragments;
 
     public Asteroid(GraphicGame graphicGame, int numFragments) {
-        this.graphicGame = graphicGame;
+        super(graphicGame);
         this.numFragments = numFragments;
     }
 
-    public void positionIn(int x, int y) {
-        graphicGame.setCenY(x);
-        graphicGame.setCenY(y);
+
+    public int getNumFragments() {
+        return numFragments;
     }
 
-    public GraphicGame getGraphicGame() {
-        return graphicGame;
+    public void setNumFragments(int numFragments) {
+        this.numFragments = numFragments;
     }
 
-    public void setGraphicGame(GraphicGame graphicGame) {
-        this.graphicGame = graphicGame;
-    }
-
-    public void setAngle(int angle) {
-        graphicGame.setAngle(angle);
-    }
-
-    public void setRotacion(int rotation) {
-        graphicGame.setRotacion(rotation);
-    }
-
+    @Override
     public void move(double retardation) {
-        graphicGame.increasePosition(retardation);
-    }
-
-    public double distance(GraphicGame otherGraphicGame) {
-        return graphicGame.distance(otherGraphicGame);
-    }
-
-    public void draw(Canvas canvas) {
-        graphicGame.drawGraphic(canvas);
+        getGraphicGame().increasePosition(retardation);
     }
 }

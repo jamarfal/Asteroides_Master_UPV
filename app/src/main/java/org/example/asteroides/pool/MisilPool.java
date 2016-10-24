@@ -13,20 +13,20 @@ import java.util.Stack;
  * Created by jamarfal on 20/10/16.
  */
 
-public class PoolObject {
+public class MisilPool {
 
     private List<Misil> objectsInUse;
     private Stack<Integer> objectsFree;
 
-    public PoolObject() {
+    public MisilPool() {
         objectsInUse = new LinkedList<>();
         objectsFree = new Stack<>();
     }
 
-    public Misil get(GraphicGame misilGraphic, GraphicGame ownerGraphic, Context context) {
+    public Misil get(GraphicGame misilGraphic, GraphicGame ownerGraphic) {
         Misil object;
         if (objectsFree.size() <= 0) {
-            object = new Misil(misilGraphic, ownerGraphic, context);
+            object = new Misil(misilGraphic, ownerGraphic);
             objectsInUse.add(object);
         } else {
             object = objectsInUse.get(objectsFree.pop());

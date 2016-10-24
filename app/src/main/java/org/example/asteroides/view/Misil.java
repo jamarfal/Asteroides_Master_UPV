@@ -9,28 +9,19 @@ import org.example.asteroides.pool.FxSoundPool;
  * Created by jamarfal on 20/10/16.
  */
 
-public class Misil {
+public class Misil extends GameObject {
     private static int STEP_VELOCITY_MISIL = 12;
-    private GraphicGame graphicGame;
     private GraphicGame graphicGameOwner;
     private boolean active;
     private int timeMisil;
-    private Context context;
 
-    public Misil(GraphicGame graphicGame, GraphicGame graphicGameOwner, Context context) {
-        this.graphicGame = graphicGame;
-        this.graphicGameOwner = graphicGameOwner;
-        this.context = context;
+    public Misil(GraphicGame graphicGame) {
+        super(graphicGame);
     }
 
-
-    //region SETTERS AND GETTERS
-    public GraphicGame getGraphicGame() {
-        return graphicGame;
-    }
-
-    public void setGraphicGame(GraphicGame graphicGame) {
-        this.graphicGame = graphicGame;
+    public Misil(GraphicGame graphicGame, GraphicGame graphicGameOwners) {
+        super(graphicGame);
+        this.graphicGameOwner = graphicGameOwners;
     }
 
     public boolean isActive() {
@@ -50,27 +41,29 @@ public class Misil {
     }
     //endregion
 
-    public void draw(Canvas canvas) {
-        graphicGame.drawGraphic(canvas);
+    public void fire(int viewWidth, int viewHeight) {
+
+        positionIn(graphicGameOwner.getCenX(), graphicGameOwner.getCenY());
+        setAngle((int) graphicGameOwner.getAngle());
+        setVelocity(
+                Math.cos(Math.toRadians(getAngle())) * STEP_VELOCITY_MISIL,
+                Math.sin(Math.toRadians(getAngle())) * STEP_VELOCITY_MISIL
+        );
+
+        int timeMisil = (int) Math.min(
+                viewWidth / Math.abs(getIncX()),
+                viewHeight / Math.abs(getIncY())
+        ) - 2;
+        setTimeMisil(timeMisil);
+        setActive(true);
+
     }
 
-    public void updatePositions(double retardation) {
-        this.graphicGame.increasePosition(retardation);
+    @Override
+    public void move(double retardation) {
+        getGraphicGame().increasePosition(retardation);
         timeMisil -= retardation;
     }
 
-    public boolean checkCollision(GraphicGame otherGraphic) {
-        return this.graphicGame.checkCollision(otherGraphic);
-    }
 
-    public void fire() {
-        graphicGame.setCenX(graphicGameOwner.getCenX());
-        graphicGame.setCenY(graphicGameOwner.getCenY());
-        graphicGame.setAngle(graphicGameOwner.getAngle());
-        graphicGame.setIncX(Math.cos(Math.toRadians(graphicGame.getAngle())) *
-                STEP_VELOCITY_MISIL);
-        graphicGame.setIncY(Math.sin(Math.toRadians(graphicGame.getAngle())) *
-                STEP_VELOCITY_MISIL);
-        FxSoundPool.getInstance(context).misil();
-    }
 }
