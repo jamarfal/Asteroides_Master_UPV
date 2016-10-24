@@ -47,7 +47,7 @@ public class Ship extends GameObject {
 
         // Actualizamos si el módulo de la velocidad no excede el máximo
         if (Math.hypot(nIncX, nIncY) <= MAX_SHIP_VELOCITY) {
-            setVelocity((int) nIncX, (int) nIncY);
+            setVelocity(nIncX, nIncY);
         }
     }
 

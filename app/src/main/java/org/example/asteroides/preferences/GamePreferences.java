@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import org.example.asteroides.Preferences;
-
 /**
  * Created by jamarfal on 24/10/16.
  */
@@ -19,14 +17,14 @@ public class GamePreferences {
     public final static String KEY_ACTIVATE_MULTIPLAYER = "activate_multiplayer";
     public final static String KEY_MAX_NUM_PLAYER = "max_num_players";
     public final static String KEY_CONNECTION_TYPE = "connection_type";
-    public static final String KEY_SENSOR = "sensor_control";
+    public static final String KEY_CONTROLLER = "controller";
 
     public GamePreferences(Context context) {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     public int getNumFragments() {
-        return tryParseInt(sharedPreferences.getString(KEY_GRAPH, "1"));
+        return tryParseInt(sharedPreferences.getString(KEY_ASTEROID_FRAGMENTS, "1"));
     }
 
     public boolean playMusic() {
@@ -49,8 +47,8 @@ public class GamePreferences {
         return sharedPreferences.getString(KEY_GRAPH, "1").equals("0");
     }
 
-    public boolean playerHasSelectedSensorControl() {
-        return sharedPreferences.getBoolean(KEY_SENSOR, true);
+    public int getController() {
+        return tryParseInt(sharedPreferences.getString(KEY_CONTROLLER, "2"));
     }
 
     public String getGraphicType() {
@@ -65,5 +63,17 @@ public class GamePreferences {
             number = 0;
         }
         return number;
+    }
+
+    public boolean playerHasSelectedSensorControl() {
+        return sharedPreferences.getString(KEY_CONTROLLER, "2").equalsIgnoreCase("1");
+    }
+
+    public boolean playerHasSelectedKeyboardControl() {
+        return sharedPreferences.getString(KEY_CONTROLLER, "2").equalsIgnoreCase("0");
+    }
+
+    public boolean playerHasSelectedTouchontrol() {
+        return sharedPreferences.getString(KEY_CONTROLLER, "2").equalsIgnoreCase("2");
     }
 }

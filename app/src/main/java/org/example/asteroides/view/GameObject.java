@@ -42,11 +42,11 @@ public abstract class GameObject {
         graphicGame.setIncY(y);
     }
 
-    public void setVelocityInAxisY(int velocity) {
+    public void setVelocityInAxisY(double velocity) {
         graphicGame.setIncY(velocity);
     }
 
-    public void setVelocityInAxisX(int velocity) {
+    public void setVelocityInAxisX(double velocity) {
         graphicGame.setIncX(velocity);
     }
 
@@ -58,7 +58,7 @@ public abstract class GameObject {
         return graphicGame.getIncY();
     }
 
-    public void setAngle(int angle) {
+    public void setAngle(double angle) {
         graphicGame.setAngle(angle);
     }
 
@@ -66,7 +66,7 @@ public abstract class GameObject {
         return graphicGame.getAngle();
     }
 
-    public void setRotacion(int rotacion) {
+    public void setRotacion(double rotacion) {
         graphicGame.setRotacion(rotacion);
     }
 

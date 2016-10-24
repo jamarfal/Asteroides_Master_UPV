@@ -42,4 +42,6 @@ principal.</string>
     <string name="main_asteroid_rotation">Asteroid en rotación</string>
     <string name="summary_activate_control_sensor_preferences">Activa el control de la nave usando el acelerómetro</string>
     <string name="title_sensors_preferences">Sensores</string>
+    <string name="controller_category_title_preference">Controles</string>
+    <string name="title_control_preferences">Tipo de control</string>
 </resources>

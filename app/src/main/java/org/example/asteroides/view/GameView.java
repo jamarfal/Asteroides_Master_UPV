@@ -78,8 +78,6 @@ public class GameView extends View implements SensorEventListener
         if (gamePreferences.playerHasSelectedSensorControl()) {
             sensorController = new SensorController(context, this);
         }
-
-
     }
     //endregion
 
@@ -217,20 +215,22 @@ public class GameView extends View implements SensorEventListener
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         super.onKeyDown(keyCode, event);
-        // Suponemos que vamos a procesar la pulsación
-        boolean procesada = true;
-        switch (keyCode) {
-            case KeyEvent.KEYCODE_DPAD_UP:
-                ship.setShipAcceleration(0);
-                break;
-            case KeyEvent.KEYCODE_DPAD_LEFT:
-            case KeyEvent.KEYCODE_DPAD_RIGHT:
-                ship.setTurnShip(0);
-                break;
-            default:
-                // Si estamos aquí, no hay pulsación que nos interese
-                procesada = false;
-                break;
+        boolean procesada = false;
+        if (gamePreferences.playerHasSelectedKeyboardControl()) {
+            procesada = true;
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_DPAD_UP:
+                    ship.setShipAcceleration(0);
+                    break;
+                case KeyEvent.KEYCODE_DPAD_LEFT:
+                case KeyEvent.KEYCODE_DPAD_RIGHT:
+                    ship.setTurnShip(0);
+                    break;
+                default:
+                    // Si estamos aquí, no hay pulsación que nos interese
+                    procesada = false;
+                    break;
+            }
         }
         return procesada;
     }
@@ -292,11 +292,10 @@ public class GameView extends View implements SensorEventListener
         float xValue;
         float yValue;
         lastAcceloremeterValues = highPass(event.values.clone(), lastAcceloremeterValues);
-
         xValue = lastAcceloremeterValues[0];
         yValue = lastAcceloremeterValues[1];
-        ship.setTurnShip((int) yValue * Ship.STEP_TURN_SHIP);
-        ship.setShipAcceleration((int) xValue * Ship.STEP_ACCELERATION_SHIP);
+        ship.setTurnShip((int) (yValue * Ship.STEP_TURN_SHIP));
+        ship.setShipAcceleration((xValue * Ship.STEP_ACCELERATION_SHIP) * -1);
     }
 
     private float[] highPass(float[] input, float[] output) {
