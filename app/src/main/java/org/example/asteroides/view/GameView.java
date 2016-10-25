@@ -62,17 +62,9 @@ public class GameView extends View implements SensorEventListener
         drawableController = new DrawableController(context);
 
         if (gamePreferences.playerHasSelectedVectorial()) {
-            drawableAsteroid = drawableController.drawPathForAsteroid();
-            drawableShip = drawableController.drawPathForShip();
-            drawableMisil = drawableController.drawPathForMisile();
-            setBackgroundColor(Color.BLACK);
-            setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            initVectorialGraphics();
         } else {
-            drawableAsteroid = drawableController.getAsteroid();
-            drawableShip = drawableController.getShip();
-            drawableShipAccelerated = drawableController.getAcceleratedShip();
-            drawableMisil = drawableController.getMisil();
-            setLayerType(View.LAYER_TYPE_HARDWARE, null);
+            initBitmapGraphics();
         }
 
         initGameObjects();
@@ -85,6 +77,22 @@ public class GameView extends View implements SensorEventListener
     //endregion
 
     //region Accesory Init Methods
+    private void initBitmapGraphics() {
+        drawableAsteroid = drawableController.getAsteroid();
+        drawableShip = drawableController.getShip();
+        drawableShipAccelerated = drawableController.getAcceleratedShip();
+        drawableMisil = drawableController.getMisil();
+        setLayerType(View.LAYER_TYPE_HARDWARE, null);
+    }
+
+    private void initVectorialGraphics() {
+        drawableAsteroid = drawableController.drawPathForAsteroid();
+        drawableShip = drawableController.drawPathForShip();
+        drawableMisil = drawableController.drawPathForMisile();
+        setBackgroundColor(Color.BLACK);
+        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+    }
+
     private void initGameObjects() {
         GraphicGame graphicGameShip = new GraphicGame(this, drawableShip);
         ship = new Ship(graphicGameShip);

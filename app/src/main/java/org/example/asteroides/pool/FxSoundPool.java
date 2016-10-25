@@ -16,10 +16,6 @@ public class FxSoundPool {
     private SoundPool soundPool;
     int idShoot, idExplossion;
 
-    protected FxSoundPool() {
-    }
-
-
     public static FxSoundPool getInstance(Context context) {
         if (instance == null) {
             synchronized (FxSoundPool.class) {

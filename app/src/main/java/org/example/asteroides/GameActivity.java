@@ -1,12 +1,11 @@
 package org.example.asteroides;
 
-import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import org.example.asteroides.view.GameView;
 
-public class GameActivity extends Activity {
+public class GameActivity extends AppCompatActivity {
 
     private GameView gameView;
 

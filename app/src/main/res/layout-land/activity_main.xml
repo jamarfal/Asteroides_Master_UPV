@@ -13,34 +13,41 @@
         android:fadeOffset="800"
         android:gestureStrokeType="multiple">
 
-        <TextView
-            android:id="@+id/game_title_text_view"
-            style="@style/Asteroid_Title" />
-
-        <TableLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:stretchColumns="*">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <TableRow android:layout_width="match_parent">
+            <TextView
+                android:id="@+id/game_title_text_view"
+                style="@style/Asteroid_Title" />
 
-                <include layout="@layout/activity_main_button_play" />
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:stretchColumns="*">
 
-                <include layout="@layout/activity_main_button_config" />
-            </TableRow>
+                <TableRow android:layout_width="match_parent">
 
-            <TableRow>
+                    <include layout="@layout/activity_main_button_play" />
 
-                <include layout="@layout/activity_main_button_about" />
+                    <include layout="@layout/activity_main_button_config" />
+                </TableRow>
 
-                <include layout="@layout/activity_main_button_score" />
-            </TableRow>
-        </TableLayout>
+                <TableRow>
 
-        <ImageView
-            android:id="@+id/imageview_main_rotating_asteroid"
-            style="@style/Asteroid_Rotation.LandScape"
-            android:contentDescription="@string/main_asteroid_rotation" />
+                    <include layout="@layout/activity_main_button_about" />
+
+                    <include layout="@layout/activity_main_button_score" />
+                </TableRow>
+            </TableLayout>
+
+            <ImageView
+                android:id="@+id/imageview_main_rotating_asteroid"
+                style="@style/Asteroid_Rotation.LandScape"
+                android:contentDescription="@string/main_asteroid_rotation" />
+        </LinearLayout>
+
 
     </android.gesture.GestureOverlayView>
 </LinearLayout>
