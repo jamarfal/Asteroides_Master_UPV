@@ -21,21 +21,27 @@ public class GameActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        gameView.getGameThread().pauseThread();
-//        gameView.getSensorController().deactivateSensor();
+        if (gameView.getGameThread() != null)
+            gameView.getGameThread().pauseThread();
+        if (gameView.getSensorController() != null)
+            gameView.getSensorController().deactivateSensor();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        gameView.getGameThread().resumeThread();
-//        gameView.getSensorController().activateSensor();
+        if (gameView.getGameThread() != null)
+            gameView.getGameThread().resumeThread();
+        if (gameView.getSensorController() != null)
+            gameView.getSensorController().activateSensor();
     }
 
     @Override
     protected void onDestroy() {
-        gameView.getGameThread().stopThread();
-//        gameView.getSensorController().deactivateSensor();
+        if (gameView.getGameThread() != null)
+            gameView.getGameThread().stopThread();
+        if (gameView.getSensorController() != null)
+            gameView.getSensorController().deactivateSensor();
         super.onDestroy();
     }
 }

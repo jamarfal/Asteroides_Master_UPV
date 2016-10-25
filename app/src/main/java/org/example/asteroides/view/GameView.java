@@ -8,14 +8,12 @@ import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.media.Image;
+
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
 
-import org.example.asteroides.R;
 import org.example.asteroides.pool.FxSoundPool;
 import org.example.asteroides.pool.MisilPool;
 import org.example.asteroides.preferences.GamePreferences;
@@ -52,7 +50,7 @@ public class GameView extends View implements SensorEventListener
     /// DRAWABLECONTROLLER ///
     private DrawableController drawableController;
     ////// DRAWABLES //////
-    private Drawable drawableShip, drawableAsteroid, drawableMisil;
+    private Drawable drawableShip, drawableShipAccelerated, drawableAsteroid, drawableMisil;
 
     //region Constructor
     public GameView(Context context, AttributeSet attrs) {
@@ -72,6 +70,7 @@ public class GameView extends View implements SensorEventListener
         } else {
             drawableAsteroid = drawableController.getAsteroid();
             drawableShip = drawableController.getShip();
+            drawableShipAccelerated = drawableController.getAcceleratedShip();
             drawableMisil = drawableController.getMisil();
             setLayerType(View.LAYER_TYPE_HARDWARE, null);
         }
@@ -259,8 +258,10 @@ public class GameView extends View implements SensorEventListener
                         ship.setTurnShip(Math.round((x - mX) / 2));
                         shooting = false;
                     } else if (dx < 6 && dy > 6) {
-                        if (y < mY)
+                        if (y < mY) {
                             ship.setShipAcceleration(Math.round((mY - y) / 25));
+                            ship.setDrawable(drawableShipAccelerated);
+                        }
                         shooting = false;
                     }
                 }
@@ -269,6 +270,7 @@ public class GameView extends View implements SensorEventListener
             case MotionEvent.ACTION_UP:
                 ship.setTurnShip(0);
                 ship.setShipAcceleration(0);
+                ship.setDrawable(drawableShip);
                 if (shooting) {
                     currentMisil = getMisilFromPool();
                     if (!currentMisil.isActive()) {
@@ -307,6 +309,11 @@ public class GameView extends View implements SensorEventListener
                 yValue = lastAcceloremeterValues[1];
                 ship.setTurnShip((int) (yValue * Ship.STEP_TURN_SHIP));
                 ship.setShipAcceleration((xValue * Ship.STEP_ACCELERATION_SHIP) * -1);
+                if (xValue > 0) {
+                    ship.setDrawable(drawableShip);
+                } else {
+                    ship.setDrawable(drawableShipAccelerated);
+                }
                 break;
             case Sensor.TYPE_ORIENTATION:
                 lastAcceloremeterValues = highPass(event.values.clone(), lastAcceloremeterValues);

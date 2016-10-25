@@ -19,7 +19,6 @@ public class FxSoundPool {
     protected FxSoundPool() {
     }
 
-    ;
 
     public static FxSoundPool getInstance(Context context) {
         if (instance == null) {

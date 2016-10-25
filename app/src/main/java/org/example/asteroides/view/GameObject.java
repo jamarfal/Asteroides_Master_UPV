@@ -1,6 +1,7 @@
 package org.example.asteroides.view;
 
 import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 
 import java.util.Vector;
 
@@ -22,6 +23,10 @@ public abstract class GameObject {
 
     public void setGraphicGame(GraphicGame graphicGame) {
         this.graphicGame = graphicGame;
+    }
+
+    public void setDrawable(Drawable drawable) {
+        this.graphicGame.setDrawable(drawable);
     }
 
     public void positionIn(int x, int y) {

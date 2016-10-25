@@ -34,6 +34,10 @@ public class DrawableController {
         return ContextCompat.getDrawable(context, R.drawable.nave);
     }
 
+    public Drawable getAcceleratedShip() {
+        return ContextCompat.getDrawable(context, R.drawable.nave_fuego);
+    }
+
     public AnimationDrawable getMisil() {
         ImageView animatedMisil = new ImageView(context);
         animatedMisil.setBackgroundResource(R.drawable.animation_misil);
@@ -90,4 +94,6 @@ public class DrawableController {
         dMisil.setIntrinsicHeight(3);
         return dMisil;
     }
+
+
 }
