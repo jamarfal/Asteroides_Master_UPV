@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toast.makeText(this, "onCreate", Toast.LENGTH_SHORT).show();
 
         initViews();
 
@@ -68,13 +67,11 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     @Override
     protected void onStart() {
         super.onStart();
-        Toast.makeText(this, "onStart", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Toast.makeText(this, "onResume", Toast.LENGTH_SHORT).show();
         if (mediaPlayer != null && gamePreferences.playMusic())
             mediaPlayer.start();
 
@@ -83,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
 
     @Override
     protected void onPause() {
-        Toast.makeText(this, "onPause", Toast.LENGTH_SHORT).show();
         if (mediaPlayer != null && gamePreferences.playMusic())
             mediaPlayer.pause();
         super.onPause();
@@ -92,19 +88,16 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     @Override
     protected void onStop() {
         super.onStop();
-        Toast.makeText(this, "onStop", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        Toast.makeText(this, "onRestart", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Toast.makeText(this, "onDestroy", Toast.LENGTH_SHORT).show();
     }
     //endregion
 

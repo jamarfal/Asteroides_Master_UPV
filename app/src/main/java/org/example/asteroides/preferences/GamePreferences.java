@@ -48,7 +48,7 @@ public class GamePreferences {
     }
 
     public int getController() {
-        return tryParseInt(sharedPreferences.getString(KEY_CONTROLLER, "3"));
+        return tryParseInt(sharedPreferences.getString(KEY_CONTROLLER, "1"));
     }
 
     public int getGraphicType() {
