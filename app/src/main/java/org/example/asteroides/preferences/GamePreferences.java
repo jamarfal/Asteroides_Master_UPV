@@ -39,8 +39,8 @@ public class GamePreferences {
         return tryParseInt(sharedPreferences.getString(KEY_MAX_NUM_PLAYER, "1"));
     }
 
-    public String getConnectionType() {
-        return sharedPreferences.getString(KEY_CONNECTION_TYPE, "1");
+    public int getConnectionType() {
+        return tryParseInt(sharedPreferences.getString(KEY_CONNECTION_TYPE, "1"));
     }
 
     public boolean playerHasSelectedVectorial() {
@@ -51,8 +51,8 @@ public class GamePreferences {
         return tryParseInt(sharedPreferences.getString(KEY_CONTROLLER, "3"));
     }
 
-    public String getGraphicType() {
-        return sharedPreferences.getString(KEY_GRAPH, "1");
+    public int getGraphicType() {
+        return tryParseInt(sharedPreferences.getString(KEY_GRAPH, "1"));
     }
 
     private int tryParseInt(String numberStr) {

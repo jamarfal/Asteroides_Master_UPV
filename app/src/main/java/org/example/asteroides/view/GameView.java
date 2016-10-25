@@ -260,7 +260,8 @@ public class GameView extends View implements SensorEventListener
                     } else if (dx < 6 && dy > 6) {
                         if (y < mY) {
                             ship.setShipAcceleration(Math.round((mY - y) / 25));
-                            ship.setDrawable(drawableShipAccelerated);
+                            if (!gamePreferences.playerHasSelectedVectorial())
+                                ship.setDrawable(drawableShipAccelerated);
                         }
                         shooting = false;
                     }
@@ -270,7 +271,8 @@ public class GameView extends View implements SensorEventListener
             case MotionEvent.ACTION_UP:
                 ship.setTurnShip(0);
                 ship.setShipAcceleration(0);
-                ship.setDrawable(drawableShip);
+                if (!gamePreferences.playerHasSelectedVectorial())
+                    ship.setDrawable(drawableShip);
                 if (shooting) {
                     currentMisil = getMisilFromPool();
                     if (!currentMisil.isActive()) {
@@ -309,16 +311,19 @@ public class GameView extends View implements SensorEventListener
                 yValue = lastAcceloremeterValues[1];
                 ship.setTurnShip((int) (yValue * Ship.STEP_TURN_SHIP));
                 ship.setShipAcceleration((xValue * Ship.STEP_ACCELERATION_SHIP) * -1);
-                if (xValue > 0) {
-                    ship.setDrawable(drawableShip);
-                } else {
-                    ship.setDrawable(drawableShipAccelerated);
+                if (!gamePreferences.playerHasSelectedVectorial()) {
+                    if (xValue > 0) {
+                        ship.setDrawable(drawableShip);
+                    } else {
+                        ship.setDrawable(drawableShipAccelerated);
+                    }
                 }
+
                 break;
             case Sensor.TYPE_ORIENTATION:
                 lastAcceloremeterValues = highPass(event.values.clone(), lastAcceloremeterValues);
                 yValue = lastAcceloremeterValues[1];
-                ship.setTurnShip((int) (yValue * Ship.STEP_TURN_SHIP));
+                ship.setTurnShip((int) (yValue * Ship.STEP_TURN_SHIP) / 2);
                 break;
         }
 

@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     private GestureLibrary gestureLibrary;
     public static PointsStorageArray storageArray = new PointsStorageArray();
     MediaPlayer mediaPlayer;
+    private GamePreferences gamePreferences;
 
 
     //region Life Cycle methods
@@ -56,8 +57,11 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
 
         startAnimations();
 
+        gamePreferences = new GamePreferences(this);
+
         mediaPlayer = MediaPlayer.create(this, R.raw.audio);
         mediaPlayer.start();
+
 
     }
 
@@ -71,13 +75,17 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     protected void onResume() {
         super.onResume();
         Toast.makeText(this, "onResume", Toast.LENGTH_SHORT).show();
-        mediaPlayer.start();
+        if (mediaPlayer != null && gamePreferences.playMusic())
+            mediaPlayer.start();
+
+
     }
 
     @Override
     protected void onPause() {
         Toast.makeText(this, "onPause", Toast.LENGTH_SHORT).show();
-        mediaPlayer.pause();
+        if (mediaPlayer != null && gamePreferences.playMusic())
+            mediaPlayer.pause();
         super.onPause();
     }
 
@@ -242,11 +250,12 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     public void showPreferences() {
         GamePreferences gamePreferences = new GamePreferences(this);
         String s = " Música: " + gamePreferences.playMusic()
-                + "\n Gráficos: " + gamePreferences.getGraphicType()
+                + "\n Gráficos: " + getResources().getStringArray(R.array.graphicTypes)[gamePreferences.getGraphicType()]
                 + "\n Fragmentos: " + gamePreferences.getNumFragments()
                 + "\n Activar Multiplayer: " + gamePreferences.isMultiplayer()
                 + "\n Máximo número de Jugadores: " + gamePreferences.getMaxNumberPlayer()
-                + "\n Tipo de conexión: " + gamePreferences.getConnectionType();
+                + "\n Tipo de conexión: " + getResources().getStringArray(R.array.connectionTypes)[gamePreferences.getConnectionType()]
+                + "\n Control: " + getResources().getStringArray(R.array.controllerTypes)[gamePreferences.getController()];
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
     //endregion
