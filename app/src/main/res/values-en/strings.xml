@@ -38,5 +38,8 @@ Android to demonstrate how you can launch new activities from the main activity.
     <!-- Item List in Score -->
     <string name="itemscore_icon_contendescription">Asteroid image</string>
     <string name="main_asteroid_rotation">Rotation Asteroid</string>
+    <string name="controller_category_title_preference">Controller</string>
+    <string name="summary_activate_control_sensor_preferences">Enables control of the ship using the accelerometer</string>
+    <string name="title_control_preferences">Control type</string>
 </resources>
 
