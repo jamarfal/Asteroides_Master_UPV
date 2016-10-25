@@ -37,9 +37,9 @@ public class GraphicGame {
         canvas.rotate((float) angle, cenX, cenY);
         drawable.draw(canvas);
         canvas.restore();
-        view.invalidate(cenX - radioInval, cenY - radioInval,
+        view.postInvalidate(cenX - radioInval, cenY - radioInval,
                 cenX + radioInval, cenY + radioInval);
-        view.invalidate(previousXposition - radioInval, previosYposition - radioInval,
+        view.postInvalidate(previousXposition - radioInval, previosYposition - radioInval,
                 previousXposition + radioInval, previosYposition + radioInval);
         previousXposition = cenX;
         previosYposition = cenY;
