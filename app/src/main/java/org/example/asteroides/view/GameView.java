@@ -3,6 +3,7 @@ package org.example.asteroides.view;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
@@ -10,9 +11,12 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 
 import org.example.asteroides.pool.FxSoundPool;
 import org.example.asteroides.pool.MisilPool;

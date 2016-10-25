@@ -4,12 +4,15 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Point;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.PathShape;
 import android.graphics.drawable.shapes.RectShape;
 import android.support.v4.content.ContextCompat;
+import android.view.Display;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import org.example.asteroides.R;
@@ -21,9 +24,18 @@ import org.example.asteroides.R;
 public class DrawableController {
 
     private Context context;
+    private Point size;
 
     public DrawableController(Context context) {
         this.context = context;
+        getScreenSize(context);
+    }
+
+    private void getScreenSize(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        size = new Point();
+        display.getSize(size);
     }
 
     public Drawable getAsteroid() {
@@ -55,8 +67,8 @@ public class DrawableController {
         ShapeDrawable shapeDrawableShip = new ShapeDrawable(new PathShape(pathShip, 1, 1));
         shapeDrawableShip.getPaint().setColor(Color.WHITE);
         shapeDrawableShip.getPaint().setStyle(Paint.Style.STROKE);
-        shapeDrawableShip.setIntrinsicWidth(20);
-        shapeDrawableShip.setIntrinsicHeight(15);
+        shapeDrawableShip.setIntrinsicWidth(getScreenRatio() * 40 / size.x);
+        shapeDrawableShip.setIntrinsicHeight(getScreenRatio() * 15 / size.y);
         drawableShip = shapeDrawableShip;
         return drawableShip;
     }
@@ -80,8 +92,8 @@ public class DrawableController {
                 new PathShape(pathAsteroide, 1, 1));
         dAsteroide.getPaint().setColor(Color.WHITE);
         dAsteroide.getPaint().setStyle(Paint.Style.STROKE);
-        dAsteroide.setIntrinsicWidth(50);
-        dAsteroide.setIntrinsicHeight(50);
+        dAsteroide.setIntrinsicWidth(getScreenRatio() * 80 / size.x);
+        dAsteroide.setIntrinsicHeight(getScreenRatio() * 80 / size.y);
         drawableAsteroid = dAsteroide;
         return drawableAsteroid;
     }
@@ -90,9 +102,14 @@ public class DrawableController {
         ShapeDrawable dMisil = new ShapeDrawable(new RectShape());
         dMisil.getPaint().setColor(Color.WHITE);
         dMisil.getPaint().setStyle(Paint.Style.STROKE);
-        dMisil.setIntrinsicWidth(15);
-        dMisil.setIntrinsicHeight(3);
+        dMisil.setIntrinsicWidth(getScreenRatio() * 20 / size.x);
+        dMisil.setIntrinsicHeight(getScreenRatio() * 3 / size.y);
         return dMisil;
+    }
+
+
+    private int getScreenRatio() {
+        return (size.x * size.y) / 1000;
     }
 
 
