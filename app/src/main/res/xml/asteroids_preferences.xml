@@ -22,7 +22,7 @@
 
     <PreferenceCategory android:title="@string/controller_category_title_preference">
         <ListPreference
-            android:defaultValue="2"
+            android:defaultValue="3"
             android:entries="@array/controllerTypes"
             android:entryValues="@array/controllerTypesValues"
             android:key="controller"

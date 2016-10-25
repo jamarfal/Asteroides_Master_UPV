@@ -48,7 +48,7 @@ public class GamePreferences {
     }
 
     public int getController() {
-        return tryParseInt(sharedPreferences.getString(KEY_CONTROLLER, "2"));
+        return tryParseInt(sharedPreferences.getString(KEY_CONTROLLER, "3"));
     }
 
     public String getGraphicType() {
@@ -66,7 +66,7 @@ public class GamePreferences {
     }
 
     public boolean playerHasSelectedSensorControl() {
-        return sharedPreferences.getString(KEY_CONTROLLER, "2").equalsIgnoreCase("1");
+        return sharedPreferences.getString(KEY_CONTROLLER, "2").equalsIgnoreCase("1") || sharedPreferences.getString(KEY_CONTROLLER, "2").equalsIgnoreCase("3");
     }
 
     public boolean playerHasSelectedKeyboardControl() {

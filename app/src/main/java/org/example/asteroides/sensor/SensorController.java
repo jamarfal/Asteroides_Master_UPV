@@ -14,27 +14,26 @@ import java.util.List;
 public class SensorController {
 
     private SensorManager sensorManager;
-    private Sensor orientationSensor;
-    private Sensor accelerometerSensor;
+    private Sensor sensor;
     private SensorEventListener sensorEventListener;
 
 
-    public SensorController(Context context, SensorEventListener sensorEventListener) {
-        initSensor(context, sensorEventListener);
+    public SensorController(Context context, SensorEventListener sensorEventListener, int sensorType) {
+        initSensor(context, sensorEventListener, sensorType);
     }
 
-    private void initSensor(Context context, SensorEventListener sensorEventListener) {
+    private void initSensor(Context context, SensorEventListener sensorEventListener, int sensorType) {
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         this.sensorEventListener = sensorEventListener;
-        List<Sensor> sensorList = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
+        List<Sensor> sensorList = sensorManager.getSensorList(sensorType);
         if (!sensorList.isEmpty()) {
-            accelerometerSensor = sensorList.get(0);
+            sensor = sensorList.get(0);
             activateSensor();
         }
     }
 
     public void activateSensor() {
-        sensorManager.registerListener(sensorEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_GAME);
     }
 
     public void deactivateSensor() {

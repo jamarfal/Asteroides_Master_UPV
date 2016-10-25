@@ -17,7 +17,6 @@ import org.example.asteroides.pool.MisilPool;
 import org.example.asteroides.preferences.GamePreferences;
 import org.example.asteroides.sensor.SensorController;
 
-import java.util.Iterator;
 import java.util.Vector;
 
 /**
@@ -27,7 +26,7 @@ import java.util.Vector;
 public class GameView extends View implements SensorEventListener
 
 {
-    // //// ASTEROIDES //////
+    ////// ASTEROIDES //////
     private Vector<Asteroid> asteroids; // Vector con los Asteroides
     private int numAsteroids = 5; // Número inicial de asteroids
     /////// SHIP //////
@@ -76,7 +75,8 @@ public class GameView extends View implements SensorEventListener
         initGameObjects();
 
         if (gamePreferences.playerHasSelectedSensorControl()) {
-            sensorController = new SensorController(context, this);
+            int sensorType = gamePreferences.getController();
+            sensorController = new SensorController(context, this, sensorType);
         }
     }
     //endregion
@@ -248,16 +248,19 @@ public class GameView extends View implements SensorEventListener
                 shooting = true;
                 break;
             case MotionEvent.ACTION_MOVE:
-                float dx = Math.abs(x - mX);
-                float dy = Math.abs(y - mY);
-                if (dy < 6 && dx > 6) {
-                    ship.setTurnShip(Math.round((x - mX) / 2));
-                    shooting = false;
-                } else if (dx < 6 && dy > 6) {
-                    if (y < mY)
-                        ship.setShipAcceleration(Math.round((mY - y) / 25));
-                    shooting = false;
+                if (gamePreferences.getController() == Sensor.TYPE_ORIENTATION || gamePreferences.playerHasSelectedTouchontrol()) {
+                    float dx = Math.abs(x - mX);
+                    float dy = Math.abs(y - mY);
+                    if (dy < 6 && dx > 6) {
+                        ship.setTurnShip(Math.round((x - mX) / 2));
+                        shooting = false;
+                    } else if (dx < 6 && dy > 6) {
+                        if (y < mY)
+                            ship.setShipAcceleration(Math.round((mY - y) / 25));
+                        shooting = false;
+                    }
                 }
+
                 break;
             case MotionEvent.ACTION_UP:
                 ship.setTurnShip(0);
@@ -291,11 +294,21 @@ public class GameView extends View implements SensorEventListener
     public void onSensorChanged(SensorEvent event) {
         float xValue;
         float yValue;
-        lastAcceloremeterValues = highPass(event.values.clone(), lastAcceloremeterValues);
-        xValue = lastAcceloremeterValues[0];
-        yValue = lastAcceloremeterValues[1];
-        ship.setTurnShip((int) (yValue * Ship.STEP_TURN_SHIP));
-        ship.setShipAcceleration((xValue * Ship.STEP_ACCELERATION_SHIP) * -1);
+        switch (event.sensor.getType()) {
+            case Sensor.TYPE_ACCELEROMETER:
+                lastAcceloremeterValues = highPass(event.values.clone(), lastAcceloremeterValues);
+                xValue = lastAcceloremeterValues[0];
+                yValue = lastAcceloremeterValues[1];
+                ship.setTurnShip((int) (yValue * Ship.STEP_TURN_SHIP));
+                ship.setShipAcceleration((xValue * Ship.STEP_ACCELERATION_SHIP) * -1);
+                break;
+            case Sensor.TYPE_ORIENTATION:
+                lastAcceloremeterValues = highPass(event.values.clone(), lastAcceloremeterValues);
+                yValue = lastAcceloremeterValues[1];
+                ship.setTurnShip((int) (yValue * Ship.STEP_TURN_SHIP));
+                break;
+        }
+
     }
 
     private float[] highPass(float[] input, float[] output) {

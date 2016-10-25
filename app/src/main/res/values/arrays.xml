@@ -26,12 +26,14 @@
 
     <string-array name="controllerTypes">
         <item>Keyboard</item>
-        <item>Sensores</item>
+        <item>Sensor Orientación</item>
+        <item>Sensor Aceleración</item>
         <item>Táctil</item>
     </string-array>
 
     <string-array name="controllerTypesValues">
         <item>0</item>
+        <item>3</item>
         <item>1</item>
         <item>2</item>
     </string-array>
