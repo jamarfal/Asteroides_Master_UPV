@@ -59,7 +59,9 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
         gamePreferences = new GamePreferences(this);
 
         mediaPlayer = MediaPlayer.create(this, R.raw.audio);
-        mediaPlayer.start();
+        if (gamePreferences.playMusic()) {
+            mediaPlayer.start();
+        }
 
 
     }
@@ -74,8 +76,6 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
         super.onResume();
         if (mediaPlayer != null && gamePreferences.playMusic())
             mediaPlayer.start();
-
-
     }
 
     @Override
