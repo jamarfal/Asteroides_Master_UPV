@@ -3,15 +3,19 @@ package org.example.asteroides.view;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
+import android.media.Image;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 
+import org.example.asteroides.R;
 import org.example.asteroides.pool.FxSoundPool;
 import org.example.asteroides.pool.MisilPool;
 import org.example.asteroides.preferences.GamePreferences;
@@ -268,6 +272,8 @@ public class GameView extends View implements SensorEventListener
                 if (shooting) {
                     currentMisil = getMisilFromPool();
                     if (!currentMisil.isActive()) {
+                        if (drawableMisil instanceof AnimationDrawable)
+                            ((AnimationDrawable) drawableMisil).start();
                         currentMisil.fire(this.getWidth(), this.getHeight());
                         FxSoundPool.getInstance(getContext()).misil();
                         break;

@@ -4,11 +4,13 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.PathShape;
 import android.graphics.drawable.shapes.RectShape;
 import android.support.v4.content.ContextCompat;
+import android.widget.ImageView;
 
 import org.example.asteroides.R;
 
@@ -32,8 +34,11 @@ public class DrawableController {
         return ContextCompat.getDrawable(context, R.drawable.nave);
     }
 
-    public Drawable getMisil() {
-        return ContextCompat.getDrawable(context, R.drawable.misil1);
+    public AnimationDrawable getMisil() {
+        ImageView animatedMisil = new ImageView(context);
+        animatedMisil.setBackgroundResource(R.drawable.animation_misil);
+        return (AnimationDrawable) animatedMisil.getBackground();
+
     }
 
     public Drawable drawPathForShip() {
