@@ -1,14 +1,11 @@
 package org.example.asteroides;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.gesture.Gesture;
 import android.gesture.GestureLibraries;
 import android.gesture.GestureLibrary;
 import android.gesture.GestureOverlayView;
 import android.gesture.Prediction;
-import android.media.MediaPlayer;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -21,22 +18,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.example.asteroides.logic.AlmacenPuntuacionesFicheroInterno;
+import org.example.asteroides.logic.AlmacenPuntuacionesPreferencias;
+import org.example.asteroides.logic.PointsStorage;
 import org.example.asteroides.logic.PointsStorageArray;
 import org.example.asteroides.preferences.GamePreferences;
 import org.example.asteroides.service.ServicioMusica;
+import org.example.asteroides.view.GameView;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements GestureOverlayView.OnGesturePerformedListener {
 
     public static final String SONG_POSITION_TIME = "song_position_time";
+    public static final int REQUEST_CODE = 1234;
     private Button aboutButton, scoreButon, playButton, configButton;
     private TextView gameTitleTextView;
     private ImageView asteroidInRotation;
     private GestureOverlayView gestureOverlayView;
     Animation rotateAndZoom, appear, translationRight, translationLeft, zoomMaxMin, loopRotation;
     private GestureLibrary gestureLibrary;
-    public static PointsStorageArray storageArray = new PointsStorageArray();
+    public static PointsStorage pointsStorage;
     private GamePreferences gamePreferences;
 
 
@@ -83,6 +85,19 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
         super.onResume();
         if (gamePreferences.playMusic())
             initMusic();
+
+        int saveMethodType = gamePreferences.getSaveMethod();
+        switch (saveMethodType) {
+            case 0:
+                pointsStorage = new PointsStorageArray();
+                break;
+            case 1:
+                pointsStorage = new AlmacenPuntuacionesPreferencias(this);
+                break;
+            case 2:
+                pointsStorage = new AlmacenPuntuacionesFicheroInterno(this);
+                break;
+        }
     }
 
     @Override
@@ -242,9 +257,22 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
 
     public void throwGameActivity(View view) {
         Intent intent = new Intent(this, GameActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE);
     }
     //endregion
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            int puntuacion = data.getExtras().getInt(GameView.POINTS);
+            String nombre = "Yo";
+            // Mejor leer nombre desde un AlertDialog.Builder o preferencias
+            pointsStorage.saveScore(puntuacion, nombre, System.currentTimeMillis());
+            throwScoreActivity(null);
+        }
+    }
 
     //region Show Preferences Values method
     public void showPreferences() {
@@ -255,7 +283,8 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
                 + "\n Activar Multiplayer: " + gamePreferences.isMultiplayer()
                 + "\n Máximo número de Jugadores: " + gamePreferences.getMaxNumberPlayer()
                 + "\n Tipo de conexión: " + getResources().getStringArray(R.array.connectionTypes)[gamePreferences.getConnectionType()]
-                + "\n Control: " + getResources().getStringArray(R.array.controllerTypes)[gamePreferences.getController()];
+                + "\n Control: " + getResources().getStringArray(R.array.controllerTypes)[gamePreferences.getController()]
+                + "\n Método de Guardado: " + getResources().getStringArray(R.array.saveMethodsTypesValues)[gamePreferences.getSaveMethod()];
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
     //endregion

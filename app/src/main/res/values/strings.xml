@@ -44,4 +44,6 @@ principal.</string>
     <string name="title_sensors_preferences">Sensores</string>
     <string name="controller_category_title_preference">Controles</string>
     <string name="title_control_preferences">Tipo de control</string>
+    <string name="summary_save_method_preferences">En que formato se guardará la puntuación</string>
+    <string name="title_save_method_preferences">Método de Guardar Puntuación</string>
 </resources>

@@ -18,6 +18,7 @@ public class GamePreferences {
     public final static String KEY_MAX_NUM_PLAYER = "max_num_players";
     public final static String KEY_CONNECTION_TYPE = "connection_type";
     public static final String KEY_CONTROLLER = "controller";
+    public static final String KEY_SAVE_METHOD = "saveMethods";
 
     public GamePreferences(Context context) {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -53,6 +54,10 @@ public class GamePreferences {
 
     public int getGraphicType() {
         return tryParseInt(sharedPreferences.getString(KEY_GRAPH, "1"));
+    }
+
+    public int getSaveMethod() {
+        return tryParseInt(sharedPreferences.getString(KEY_SAVE_METHOD, "1"));
     }
 
     private int tryParseInt(String numberStr) {

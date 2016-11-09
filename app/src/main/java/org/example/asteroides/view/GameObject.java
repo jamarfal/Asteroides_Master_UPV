@@ -63,6 +63,14 @@ public abstract class GameObject {
         return graphicGame.getIncY();
     }
 
+    public double getCenX() {
+        return graphicGame.getCenX();
+    }
+
+    public double getCenY() {
+        return graphicGame.getCenY();
+    }
+
     public void setAngle(double angle) {
         graphicGame.setAngle(angle);
     }

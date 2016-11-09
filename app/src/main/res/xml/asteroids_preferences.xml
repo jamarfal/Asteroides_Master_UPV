@@ -20,6 +20,14 @@
         android:summary="@string/summary_asteroid_fragments_preferences"
         android:title="@string/title_asteroid_fragments_preferences" />
 
+    <ListPreference
+        android:defaultValue="1"
+        android:entries="@array/saveMethodsTypes"
+        android:entryValues="@array/saveMethodsTypesValues"
+        android:key="saveMethods"
+        android:summary="@string/summary_save_method_preferences"
+        android:title="@string/title_save_method_preferences" />
+
     <PreferenceCategory android:title="@string/controller_category_title_preference">
         <ListPreference
             android:defaultValue="1"

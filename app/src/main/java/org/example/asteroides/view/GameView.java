@@ -1,22 +1,21 @@
 package org.example.asteroides.view;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 
+import android.os.Bundle;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 
 import org.example.asteroides.pool.FxSoundPool;
 import org.example.asteroides.pool.MisilPool;
@@ -32,6 +31,7 @@ import java.util.Vector;
 public class GameView extends View implements SensorEventListener
 
 {
+
     ////// ASTEROIDES //////
     private Vector<Asteroid> asteroids; // Vector con los Asteroides
     private int numAsteroids = 5; // Número inicial de asteroids
@@ -56,6 +56,11 @@ public class GameView extends View implements SensorEventListener
     ////// DRAWABLES //////
     private Drawable drawableShip, drawableShipAccelerated, drawableMisil;
     private Drawable drawableAsteroid[] = new Drawable[3];
+    ////// PUNTUACION //////
+    public static final String POINTS = "puntuacion";
+    private int puntuacion = 0;
+    ////// Actividad Padre //////
+    private Activity activityFather;
 
     //region Constructor
     public GameView(Context context, AttributeSet attrs) {
@@ -105,12 +110,12 @@ public class GameView extends View implements SensorEventListener
         asteroids = new Vector<>();
 
         for (int i = 0; i < numAsteroids; i++) {
-//            GraphicGame graphicGameAsteroid = new GraphicGame(this, drawableAsteroid);
-//            Asteroid asteroid = new Asteroid(graphicGameAsteroid, gamePreferences.getNumFragments());
-//            asteroid.setVelocity((int) (Math.random() * 4 - 2), (int) (Math.random() * 4 - 2));
-//            asteroid.setAngle((int) (Math.random() * 360));
-//            asteroid.setRotacion((int) (Math.random() * 8 - 4));
-//            asteroids.add(asteroid);
+            GraphicGame graphicGameAsteroid = new GraphicGame(this, drawableAsteroid[0]);
+            Asteroid asteroid = new Asteroid(graphicGameAsteroid, gamePreferences.getNumFragments());
+            asteroid.setVelocity((int) (Math.random() * 4 - 2), (int) (Math.random() * 4 - 2));
+            asteroid.setAngle((int) (Math.random() * 360));
+            asteroid.setRotacion((int) (Math.random() * 8 - 4));
+            asteroids.add(asteroid);
         }
 
         misilPool = new MisilPool();
@@ -124,6 +129,12 @@ public class GameView extends View implements SensorEventListener
 
     public SensorController getSensorController() {
         return sensorController;
+    }
+    //endregion
+
+    //region Setters
+    public void setActivityFather(Activity activityFather) {
+        this.activityFather = activityFather;
     }
     //endregion
 
@@ -185,6 +196,12 @@ public class GameView extends View implements SensorEventListener
 
 
         updatePositions(retardation);
+
+        for (Asteroid asteroid : asteroids) {
+            if (asteroid.checkCollision(ship.getGraphicGame())) {
+                finishGame();
+            }
+        }
     }
 
 
@@ -218,29 +235,43 @@ public class GameView extends View implements SensorEventListener
     }
 
     private void destroyAsteroid(int i) {
+
+        Asteroid asteroidToDestroy = asteroids.get(i);
         int tam;
-        if (asteroids.get(i).getGraphicGame().getDrawable() != drawableAsteroid[2]) {
-            if (asteroids.get(i).getGraphicGame().getDrawable() == drawableAsteroid[1]) {
+        if (asteroidToDestroy.getGraphicGame().getDrawable() != drawableAsteroid[2]) {
+            if (asteroidToDestroy.getGraphicGame().getDrawable() == drawableAsteroid[1]) {
                 tam = 2;
             } else {
                 tam = 1;
             }
 
-            for (int n = 0; n < numAsteroids; n++) {
-//                Grafico asteroide = new Grafico(this, drawableAsteroide[tam]);
-//
-//                asteroide.setCenX(asteroides.get(i).getCenX());
-//                asteroide.setCenY(asteroides.get(i).getCenY());
-//                asteroide.setIncX(Math.random() * 7 - 2 - tam);
-//
-//                asteroide.setIncY(Math.random() * 7 - 2 - tam);
-//                asteroide.setAngulo((int) (Math.random() * 360));
-//                asteroide.setRotacion((int) (Math.random() * 8 - 4));
-//                asteroides.add(asteroide);
+            int numFragments = asteroidToDestroy.getNumFragments();
+            for (int n = 0; n < numFragments; n++) {
+                GraphicGame graphicGameAsteroid = new GraphicGame(this, drawableAsteroid[tam]);
+                Asteroid asteroide = new Asteroid(graphicGameAsteroid, 2);
+
+                asteroide.positionIn((int) asteroidToDestroy.getCenX(), (int) asteroidToDestroy.getCenY());
+                double velocity = Math.random() * 7 - 2 - tam;
+                asteroide.setVelocity(velocity, velocity);
+                asteroide.setAngle((int) (Math.random() * 360));
+                asteroide.setRotacion((int) (Math.random() * 8 - 4));
+                synchronized (asteroids) {
+                    asteroids.add(asteroide);
+                }
+
             }
+
+            // Puntuación
+            puntuacion += 1000;
+            // Sonido
             FxSoundPool.getInstance(context).explossion();
+            // Eliminación Asteroide
             synchronized (asteroids) {
                 asteroids.remove(i);
+            }
+            // Condición Fin de Juego.
+            if (asteroids.isEmpty()) {
+                finishGame();
             }
         }
     }
@@ -415,6 +446,14 @@ public class GameView extends View implements SensorEventListener
     }
     //endregion
 
+    private void finishGame() {
+        Bundle bundle = new Bundle();
+        bundle.putInt(POINTS, puntuacion);
+        Intent intent = new Intent();
+        intent.putExtras(bundle);
+        activityFather.setResult(Activity.RESULT_OK, intent);
+        activityFather.finish();
+    }
 
 }
 
