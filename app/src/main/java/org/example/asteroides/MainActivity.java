@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.example.asteroides.logic.AlmacenPuntuacionesFicheroExterno;
 import org.example.asteroides.logic.AlmacenPuntuacionesFicheroInterno;
 import org.example.asteroides.logic.AlmacenPuntuacionesPreferencias;
 import org.example.asteroides.logic.PointsStorage;
@@ -86,6 +87,10 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
         if (gamePreferences.playMusic())
             initMusic();
 
+        initSaveMethod();
+    }
+
+    private void initSaveMethod() {
         int saveMethodType = gamePreferences.getSaveMethod();
         switch (saveMethodType) {
             case 0:
@@ -96,6 +101,9 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
                 break;
             case 2:
                 pointsStorage = new AlmacenPuntuacionesFicheroInterno(this);
+                break;
+            case 3:
+                pointsStorage = new AlmacenPuntuacionesFicheroExterno(this);
                 break;
         }
     }

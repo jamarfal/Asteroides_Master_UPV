@@ -42,11 +42,13 @@
         <item>Array</item>
         <item>Preferencias</item>
         <item>Fichero en memoria Interna</item>
+        <item>Fichero en memoria Externa</item>
     </string-array>
 
     <string-array name="saveMethodsTypesValues">
         <item>0</item>
         <item>1</item>
         <item>2</item>
+        <item>3</item>
     </string-array>
 </resources>
