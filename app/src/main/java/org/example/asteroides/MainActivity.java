@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import org.example.asteroides.logic.PointsStorageArray;
 import org.example.asteroides.preferences.GamePreferences;
+import org.example.asteroides.service.ServicioMusica;
 
 import java.util.ArrayList;
 
@@ -36,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     Animation rotateAndZoom, appear, translationRight, translationLeft, zoomMaxMin, loopRotation;
     private GestureLibrary gestureLibrary;
     public static PointsStorageArray storageArray = new PointsStorageArray();
-    MediaPlayer mediaPlayer;
     private GamePreferences gamePreferences;
 
 
@@ -58,12 +58,19 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
 
         gamePreferences = new GamePreferences(this);
 
-        mediaPlayer = MediaPlayer.create(this, R.raw.audio);
         if (gamePreferences.playMusic()) {
-            mediaPlayer.start();
+            initMusic();
         }
 
 
+    }
+
+    private void initMusic() {
+        startService(new Intent(MainActivity.this, ServicioMusica.class));
+    }
+
+    private void stopMusic() {
+        stopService(new Intent(MainActivity.this, ServicioMusica.class));
     }
 
     @Override
@@ -74,14 +81,14 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     @Override
     protected void onResume() {
         super.onResume();
-        if (mediaPlayer != null && gamePreferences.playMusic())
-            mediaPlayer.start();
+        if (gamePreferences.playMusic())
+            initMusic();
     }
 
     @Override
     protected void onPause() {
-        if (mediaPlayer != null && gamePreferences.playMusic())
-            mediaPlayer.pause();
+        if (gamePreferences.playMusic())
+            stopMusic();
         super.onPause();
     }
 
@@ -105,20 +112,20 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (mediaPlayer != null) {
-            int position = mediaPlayer.getCurrentPosition();
-            outState.putInt(SONG_POSITION_TIME, position);
-        }
+//        if (mediaPlayer != null) {
+//            int position = mediaPlayer.getCurrentPosition();
+//            outStat
+
 
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        if (savedInstanceState != null && mediaPlayer != null) {
-            int position = savedInstanceState.getInt(SONG_POSITION_TIME);
-            mediaPlayer.seekTo(position);
-        }
+//        if (savedInstanceState != null && mediaPlayer != null) {
+//            int position = savedInstanceState.getInt(SONG_POSITION_TIME);
+//            mediaPlayer.seekTo(position);
+//        }
 
     }
 

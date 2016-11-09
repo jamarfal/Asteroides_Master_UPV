@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.PathShape;
 import android.graphics.drawable.shapes.RectShape;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.view.Display;
 import android.view.WindowManager;
@@ -40,6 +41,14 @@ public class DrawableController {
 
     public Drawable getAsteroid() {
         return ContextCompat.getDrawable(context, R.drawable.asteroide1);
+    }
+
+    public Drawable[] getAsteroidsFragments() {
+        Drawable drawableAsteroide[] = new Drawable[3];
+        drawableAsteroide[0] = context.getResources().getDrawable(R.drawable.asteroide1);
+        drawableAsteroide[1] = context.getResources().getDrawable(R.drawable.asteroide2);
+        drawableAsteroide[2] = context.getResources().getDrawable(R.drawable.asteroide3);
+        return drawableAsteroide;
     }
 
     public Drawable getShip() {
@@ -75,6 +84,32 @@ public class DrawableController {
 
     public Drawable drawPathForAsteroid() {
         Drawable drawableAsteroid;
+        Path pathAsteroide = createAsteroidPath();
+        ShapeDrawable dAsteroide = new ShapeDrawable(
+                new PathShape(pathAsteroide, 1, 1));
+        dAsteroide.getPaint().setColor(Color.WHITE);
+        dAsteroide.getPaint().setStyle(Paint.Style.STROKE);
+        dAsteroide.setIntrinsicWidth(getScreenRatio() * 80 / size.x);
+        dAsteroide.setIntrinsicHeight(getScreenRatio() * 80 / size.y);
+        drawableAsteroid = dAsteroide;
+        return drawableAsteroid;
+    }
+
+    public Drawable[] drawPathsForAsteroids() {
+        Drawable drawableAsteroide[] = new Drawable[3];
+        for (int i = 0; i < 3; i++) {
+            ShapeDrawable dAsteroide = new ShapeDrawable(new PathShape(createAsteroidPath(), 1, 1));
+            dAsteroide.getPaint().setColor(Color.WHITE);
+
+            dAsteroide.getPaint().setStyle(Paint.Style.STROKE);
+            dAsteroide.setIntrinsicWidth(50 - i * 14);
+            dAsteroide.setIntrinsicHeight(50 - i * 14);
+            drawableAsteroide[i] = dAsteroide;
+        }
+        return drawableAsteroide;
+    }
+
+    private Path createAsteroidPath() {
         Path pathAsteroide = new Path();
         pathAsteroide.moveTo((float) 0.3, (float) 0.0);
         pathAsteroide.lineTo((float) 0.6, (float) 0.0);
@@ -88,15 +123,9 @@ public class DrawableController {
         pathAsteroide.lineTo((float) 0.0, (float) 0.6);
         pathAsteroide.lineTo((float) 0.0, (float) 0.2);
         pathAsteroide.lineTo((float) 0.3, (float) 0.0);
-        ShapeDrawable dAsteroide = new ShapeDrawable(
-                new PathShape(pathAsteroide, 1, 1));
-        dAsteroide.getPaint().setColor(Color.WHITE);
-        dAsteroide.getPaint().setStyle(Paint.Style.STROKE);
-        dAsteroide.setIntrinsicWidth(getScreenRatio() * 80 / size.x);
-        dAsteroide.setIntrinsicHeight(getScreenRatio() * 80 / size.y);
-        drawableAsteroid = dAsteroide;
-        return drawableAsteroid;
+        return pathAsteroide;
     }
+
 
     public ShapeDrawable drawPathForMisile() {
         ShapeDrawable dMisil = new ShapeDrawable(new RectShape());

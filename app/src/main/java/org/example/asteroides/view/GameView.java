@@ -54,7 +54,8 @@ public class GameView extends View implements SensorEventListener
     /// DRAWABLECONTROLLER ///
     private DrawableController drawableController;
     ////// DRAWABLES //////
-    private Drawable drawableShip, drawableShipAccelerated, drawableAsteroid, drawableMisil;
+    private Drawable drawableShip, drawableShipAccelerated, drawableMisil;
+    private Drawable drawableAsteroid[] = new Drawable[3];
 
     //region Constructor
     public GameView(Context context, AttributeSet attrs) {
@@ -82,7 +83,7 @@ public class GameView extends View implements SensorEventListener
 
     //region Accesory Init Methods
     private void initBitmapGraphics() {
-        drawableAsteroid = drawableController.getAsteroid();
+        drawableAsteroid = drawableController.getAsteroidsFragments();
         drawableShip = drawableController.getShip();
         drawableShipAccelerated = drawableController.getAcceleratedShip();
         drawableMisil = drawableController.getMisil();
@@ -90,7 +91,7 @@ public class GameView extends View implements SensorEventListener
     }
 
     private void initVectorialGraphics() {
-        drawableAsteroid = drawableController.drawPathForAsteroid();
+        drawableAsteroid = drawableController.drawPathsForAsteroids();
         drawableShip = drawableController.drawPathForShip();
         drawableMisil = drawableController.drawPathForMisile();
         setBackgroundColor(Color.BLACK);
@@ -104,12 +105,12 @@ public class GameView extends View implements SensorEventListener
         asteroids = new Vector<>();
 
         for (int i = 0; i < numAsteroids; i++) {
-            GraphicGame graphicGameAsteroid = new GraphicGame(this, drawableAsteroid);
-            Asteroid asteroid = new Asteroid(graphicGameAsteroid, gamePreferences.getNumFragments());
-            asteroid.setVelocity((int) (Math.random() * 4 - 2), (int) (Math.random() * 4 - 2));
-            asteroid.setAngle((int) (Math.random() * 360));
-            asteroid.setRotacion((int) (Math.random() * 8 - 4));
-            asteroids.add(asteroid);
+//            GraphicGame graphicGameAsteroid = new GraphicGame(this, drawableAsteroid);
+//            Asteroid asteroid = new Asteroid(graphicGameAsteroid, gamePreferences.getNumFragments());
+//            asteroid.setVelocity((int) (Math.random() * 4 - 2), (int) (Math.random() * 4 - 2));
+//            asteroid.setAngle((int) (Math.random() * 360));
+//            asteroid.setRotacion((int) (Math.random() * 8 - 4));
+//            asteroids.add(asteroid);
         }
 
         misilPool = new MisilPool();
@@ -206,6 +207,8 @@ public class GameView extends View implements SensorEventListener
                 } else {
                     for (int i = 0; i < asteroids.size(); i++)
                         if (misil.checkCollision(asteroids.elementAt(i).getGraphicGame())) {
+                            misil.setActive(false);
+                            misilPool.free(misil);
                             destroyAsteroid(i);
                             break;
                         }
@@ -215,9 +218,30 @@ public class GameView extends View implements SensorEventListener
     }
 
     private void destroyAsteroid(int i) {
-        FxSoundPool.getInstance(context).explossion();
-        synchronized (asteroids) {
-            asteroids.remove(i);
+        int tam;
+        if (asteroids.get(i).getGraphicGame().getDrawable() != drawableAsteroid[2]) {
+            if (asteroids.get(i).getGraphicGame().getDrawable() == drawableAsteroid[1]) {
+                tam = 2;
+            } else {
+                tam = 1;
+            }
+
+            for (int n = 0; n < numAsteroids; n++) {
+//                Grafico asteroide = new Grafico(this, drawableAsteroide[tam]);
+//
+//                asteroide.setCenX(asteroides.get(i).getCenX());
+//                asteroide.setCenY(asteroides.get(i).getCenY());
+//                asteroide.setIncX(Math.random() * 7 - 2 - tam);
+//
+//                asteroide.setIncY(Math.random() * 7 - 2 - tam);
+//                asteroide.setAngulo((int) (Math.random() * 360));
+//                asteroide.setRotacion((int) (Math.random() * 8 - 4));
+//                asteroides.add(asteroide);
+            }
+            FxSoundPool.getInstance(context).explossion();
+            synchronized (asteroids) {
+                asteroids.remove(i);
+            }
         }
     }
 
