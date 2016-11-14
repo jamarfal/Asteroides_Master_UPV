@@ -26,6 +26,7 @@ import org.example.asteroides.logic.AlmacenPuntuacionesRecursosAssets;
 import org.example.asteroides.logic.AlmacenPuntuacionesRecursosRaw;
 import org.example.asteroides.logic.PointsStorage;
 import org.example.asteroides.logic.PointsStorageArray;
+import org.example.asteroides.logic.PointsStorageXML_SAX;
 import org.example.asteroides.preferences.GamePreferences;
 import org.example.asteroides.service.ServicioMusica;
 import org.example.asteroides.view.GameView;
@@ -116,6 +117,9 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
                 break;
             case 6:
                 pointsStorage = new AlmacenPuntuacionesRecursosAssets(this);
+                break;
+            case 7:
+                pointsStorage = new PointsStorageXML_SAX(this);
                 break;
         }
     }
