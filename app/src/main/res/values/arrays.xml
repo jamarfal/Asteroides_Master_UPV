@@ -47,6 +47,7 @@
         <item>Fichero en Carpeta Raw</item>
         <item>Fichero en Carpeta Assets</item>
         <item>Fichero en XML</item>
+        <item>Fichero en JSON</item>
     </string-array>
 
     <string-array name="saveMethodsTypesValues">
@@ -58,5 +59,6 @@
         <item>5</item>
         <item>6</item>
         <item>7</item>
+        <item>8</item>
     </string-array>
 </resources>

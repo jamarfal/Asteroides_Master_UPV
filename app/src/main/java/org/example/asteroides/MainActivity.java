@@ -21,6 +21,7 @@ import android.widget.Toast;
 import org.example.asteroides.logic.AlmacenPuntuacionesFicheroExterno;
 import org.example.asteroides.logic.AlmacenPuntuacionesFicheroExternoExtApl;
 import org.example.asteroides.logic.AlmacenPuntuacionesFicheroInterno;
+import org.example.asteroides.logic.AlmacenPuntuacionesGSon;
 import org.example.asteroides.logic.AlmacenPuntuacionesPreferencias;
 import org.example.asteroides.logic.AlmacenPuntuacionesRecursosAssets;
 import org.example.asteroides.logic.AlmacenPuntuacionesRecursosRaw;
@@ -120,6 +121,9 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
                 break;
             case 7:
                 pointsStorage = new PointsStorageXML_SAX(this);
+                break;
+            case 8:
+                pointsStorage = new AlmacenPuntuacionesGSon(this);
                 break;
         }
     }
