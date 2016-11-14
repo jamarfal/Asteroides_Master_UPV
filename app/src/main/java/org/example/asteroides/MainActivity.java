@@ -19,8 +19,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.example.asteroides.logic.AlmacenPuntuacionesFicheroExterno;
+import org.example.asteroides.logic.AlmacenPuntuacionesFicheroExternoExtApl;
 import org.example.asteroides.logic.AlmacenPuntuacionesFicheroInterno;
 import org.example.asteroides.logic.AlmacenPuntuacionesPreferencias;
+import org.example.asteroides.logic.AlmacenPuntuacionesRecursosAssets;
+import org.example.asteroides.logic.AlmacenPuntuacionesRecursosRaw;
 import org.example.asteroides.logic.PointsStorage;
 import org.example.asteroides.logic.PointsStorageArray;
 import org.example.asteroides.preferences.GamePreferences;
@@ -104,6 +107,15 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
                 break;
             case 3:
                 pointsStorage = new AlmacenPuntuacionesFicheroExterno(this);
+                break;
+            case 4:
+                pointsStorage = new AlmacenPuntuacionesFicheroExternoExtApl(this);
+                break;
+            case 5:
+                pointsStorage = new AlmacenPuntuacionesRecursosRaw(this);
+                break;
+            case 6:
+                pointsStorage = new AlmacenPuntuacionesRecursosAssets(this);
                 break;
         }
     }

@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,11 +17,11 @@ import java.util.Vector;
  * Created by jamarfal on 9/11/16.
  */
 
-public class AlmacenPuntuacionesFicheroExterno implements PointsStorage {
-    private static String FICHERO = Environment.getExternalStorageDirectory() + "/puntuaciones.txt";
+public class AlmacenPuntuacionesFicheroExternoExtApl implements PointsStorage {
+    private static String FICHERO = Environment.getExternalStorageDirectory() + "/Android/data/org.example.asteroides/files/puntuaciones.txt";
     private Context context;
 
-    public AlmacenPuntuacionesFicheroExterno(Context context) {
+    public AlmacenPuntuacionesFicheroExternoExtApl(Context context) {
         this.context = context;
     }
 
@@ -28,8 +29,15 @@ public class AlmacenPuntuacionesFicheroExterno implements PointsStorage {
     public void saveScore(int puntos, String nombre, long fecha) {
         if (isExternalMemoryAvailable()) {
             FileOutputStream f = null;
+
+
             try {
-                f = new FileOutputStream(FICHERO, true);
+                File ruta = new File(FICHERO);
+                if (!ruta.exists()) {
+                    ruta.mkdirs();
+                }
+
+                f = new FileOutputStream(ruta, true);
                 String texto = puntos + " " + nombre + "\n";
                 f.write(texto.getBytes());
             } catch (Exception e) {
@@ -53,7 +61,11 @@ public class AlmacenPuntuacionesFicheroExterno implements PointsStorage {
         if (isExternalMemoryAvailable()) {
             FileInputStream f = null;
             try {
-                f = new FileInputStream(FICHERO);
+                File ruta = new File(FICHERO);
+                if (!ruta.exists()) {
+                    ruta.mkdirs();
+                }
+                f = new FileInputStream(ruta);
                 BufferedReader entrada = new BufferedReader(new InputStreamReader(f));
                 int n = 0;
                 String linea;

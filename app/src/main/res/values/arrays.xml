@@ -43,6 +43,9 @@
         <item>Preferencias</item>
         <item>Fichero en memoria Interna</item>
         <item>Fichero en memoria Externa</item>
+        <item>Fichero en memoria Externa Api 2.2</item>
+        <item>Fichero en Carpeta Raw</item>
+        <item>Fichero en Carpeta Assets</item>
     </string-array>
 
     <string-array name="saveMethodsTypesValues">
@@ -50,5 +53,8 @@
         <item>1</item>
         <item>2</item>
         <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
     </string-array>
 </resources>
