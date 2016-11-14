@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,8 +29,13 @@ public class AlmacenPuntuacionesFicheroExterno implements PointsStorage {
     public void saveScore(int puntos, String nombre, long fecha) {
         if (isExternalMemoryAvailable()) {
             FileOutputStream f = null;
+            File file = null;
             try {
-                f = new FileOutputStream(FICHERO, true);
+                file = new File(FICHERO);
+                if (!file.exists()) {
+                    file.mkdirs();
+                }
+                f = new FileOutputStream(file, true);
                 String texto = puntos + " " + nombre + "\n";
                 f.write(texto.getBytes());
             } catch (Exception e) {
@@ -52,19 +58,22 @@ public class AlmacenPuntuacionesFicheroExterno implements PointsStorage {
         Vector<String> result = new Vector<String>();
         if (isExternalMemoryAvailable()) {
             FileInputStream f = null;
+            File file = null;
             try {
-                f = new FileInputStream(FICHERO);
-                BufferedReader entrada = new BufferedReader(new InputStreamReader(f));
-                int n = 0;
-                String linea;
-                do {
-                    linea = entrada.readLine();
-                    if (linea != null) {
-                        result.add(linea);
-                        n++;
-                    }
-                } while (n < cantidad && linea != null);
-
+                file = new File(FICHERO);
+                if (file.exists()) {
+                    f = new FileInputStream(file);
+                    BufferedReader entrada = new BufferedReader(new InputStreamReader(f));
+                    int n = 0;
+                    String linea;
+                    do {
+                        linea = entrada.readLine();
+                        if (linea != null) {
+                            result.add(linea);
+                            n++;
+                        }
+                    } while (n < cantidad && linea != null);
+                }
             } catch (Exception e) {
                 Log.e("Asteroides", e.getMessage(), e);
             } finally {
