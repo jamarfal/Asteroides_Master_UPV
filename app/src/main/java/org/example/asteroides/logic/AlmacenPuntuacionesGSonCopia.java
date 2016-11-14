@@ -16,32 +16,33 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 /**
  * Created by jamarfal on 14/11/16.
  */
 
-public class AlmacenPuntuacionesGSon implements PointsStorage {
+public class AlmacenPuntuacionesGSonCopia implements PointsStorage {
 
     private String string;
-    private Clase objeto = new Clase();
+    private ArrayList<Puntuacion> puntuaciones = new ArrayList<>();
     private Gson gson = new Gson();
     private static String FICHERO = Environment.getExternalStorageDirectory() + "/puntuaciones.txt";
 
-    private Type type = new TypeToken<Clase>() {
+    private Type type = new TypeToken<List<Puntuacion>>() {
     }.getType();
     private Context context;
 
-    public AlmacenPuntuacionesGSon(Context context) {
+    public AlmacenPuntuacionesGSonCopia(Context context) {
         this.context = context;
-        this.objeto = getObjetoFromJson();
+        this.puntuaciones = getPuntuacionesList();
     }
 
     @Override
     public void saveScore(int puntos, String nombre, long fecha) {
-        this.objeto.puntuaciones.add(new Puntuacion(puntos, nombre, fecha));
-        string = gson.toJson(this.objeto, type);
+        puntuaciones.add(new Puntuacion(puntos, nombre, fecha));
+        string = gson.toJson(puntuaciones, type);
         guardarString();
     }
 
@@ -75,8 +76,8 @@ public class AlmacenPuntuacionesGSon implements PointsStorage {
     public Vector<String> scoreList(int cantidad) {
         string = leerString();
         Vector<String> salida = new Vector<>();
-        this.objeto = getObjetoFromJson();
-        for (Puntuacion puntuacion : this.objeto.puntuaciones) {
+        puntuaciones = getPuntuacionesList();
+        for (Puntuacion puntuacion : puntuaciones) {
             salida.add(puntuacion.getPuntos() + " " + puntuacion.getNombre());
         }
 
@@ -124,22 +125,17 @@ public class AlmacenPuntuacionesGSon implements PointsStorage {
         return stateSd.equalsIgnoreCase(Environment.MEDIA_MOUNTED);
     }
 
-    private Clase getObjetoFromJson() {
-        Clase clase = new Clase();
+    private ArrayList<Puntuacion> getPuntuacionesList() {
+        ArrayList<Puntuacion> puntuaciones = new ArrayList<>();
         string = leerString();
         try {
             if (string != null && !string.isEmpty()) {
-                clase = gson.fromJson(string, type);
+                puntuaciones = gson.fromJson(string, type);
             }
         } catch (Exception exception) {
             Log.e("Asteroides", exception.getMessage(), exception);
         }
-        return clase;
-    }
-
-    public class Clase {
-        private ArrayList<Puntuacion> puntuaciones = new ArrayList<>();
-        private boolean guardado;
+        return puntuaciones;
     }
 
 }
