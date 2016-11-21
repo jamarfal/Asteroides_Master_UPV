@@ -52,6 +52,8 @@
         <item>SQLITE</item>
         <item>ContentProvider</item>
         <item>Socket</item>
+        <item>Servicio Web</item>
+        <item>Servicio Web AsyncTask</item>
     </string-array>
 
     <string-array name="saveMethodsTypesValues">
@@ -68,5 +70,7 @@
         <item>10</item>
         <item>11</item>
         <item>12</item>
+        <item>13</item>
+        <item>14</item>
     </string-array>
 </resources>

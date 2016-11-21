@@ -6,6 +6,7 @@ import android.gesture.GestureLibraries;
 import android.gesture.GestureLibrary;
 import android.gesture.GestureOverlayView;
 import android.gesture.Prediction;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -29,6 +30,8 @@ import org.example.asteroides.logic.AlmacenPuntuacionesRecursosAssets;
 import org.example.asteroides.logic.AlmacenPuntuacionesRecursosRaw;
 import org.example.asteroides.logic.AlmacenPuntuacionesSQLite;
 import org.example.asteroides.logic.AlmacenPuntuacionesSQLiteRel;
+import org.example.asteroides.logic.AlmacenPuntuacionesSW_PHP;
+import org.example.asteroides.logic.AlmacenPuntuacionesSW_PHP_AsyncTask;
 import org.example.asteroides.logic.AlmacenPuntuacionesSocket;
 import org.example.asteroides.logic.PointsStorage;
 import org.example.asteroides.logic.PointsStorageArray;
@@ -75,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
             initMusic();
         }
 
-
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().permitNetwork().build());
     }
 
     private void initMusic() {
@@ -141,6 +144,12 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
                 break;
             case 12:
                 pointsStorage = new AlmacenPuntuacionesSocket();
+                break;
+            case 13:
+                pointsStorage = new AlmacenPuntuacionesSW_PHP();
+                break;
+            case 14:
+                pointsStorage = new AlmacenPuntuacionesSW_PHP_AsyncTask(this);
                 break;
         }
     }
