@@ -22,9 +22,14 @@ import org.example.asteroides.logic.AlmacenPuntuacionesFicheroExterno;
 import org.example.asteroides.logic.AlmacenPuntuacionesFicheroExternoExtApl;
 import org.example.asteroides.logic.AlmacenPuntuacionesFicheroInterno;
 import org.example.asteroides.logic.AlmacenPuntuacionesGSon;
+import org.example.asteroides.logic.AlmacenPuntuacionesJson;
 import org.example.asteroides.logic.AlmacenPuntuacionesPreferencias;
+import org.example.asteroides.logic.AlmacenPuntuacionesProvider;
 import org.example.asteroides.logic.AlmacenPuntuacionesRecursosAssets;
 import org.example.asteroides.logic.AlmacenPuntuacionesRecursosRaw;
+import org.example.asteroides.logic.AlmacenPuntuacionesSQLite;
+import org.example.asteroides.logic.AlmacenPuntuacionesSQLiteRel;
+import org.example.asteroides.logic.AlmacenPuntuacionesSocket;
 import org.example.asteroides.logic.PointsStorage;
 import org.example.asteroides.logic.PointsStorageArray;
 import org.example.asteroides.logic.PointsStorageXML_SAX;
@@ -124,6 +129,18 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
                 break;
             case 8:
                 pointsStorage = new AlmacenPuntuacionesGSon(this);
+                break;
+            case 9:
+                pointsStorage = new AlmacenPuntuacionesJson(this);
+                break;
+            case 10:
+                pointsStorage = new AlmacenPuntuacionesSQLiteRel(this);
+                break;
+            case 11:
+                pointsStorage = new AlmacenPuntuacionesProvider(this);
+                break;
+            case 12:
+                pointsStorage = new AlmacenPuntuacionesSocket();
                 break;
         }
     }

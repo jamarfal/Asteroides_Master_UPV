@@ -47,7 +47,11 @@
         <item>Fichero en Carpeta Raw</item>
         <item>Fichero en Carpeta Assets</item>
         <item>Fichero en XML</item>
+        <item>Fichero en JSON con GSON</item>
         <item>Fichero en JSON</item>
+        <item>SQLITE</item>
+        <item>ContentProvider</item>
+        <item>Socket</item>
     </string-array>
 
     <string-array name="saveMethodsTypesValues">
@@ -60,5 +64,9 @@
         <item>6</item>
         <item>7</item>
         <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
     </string-array>
 </resources>
