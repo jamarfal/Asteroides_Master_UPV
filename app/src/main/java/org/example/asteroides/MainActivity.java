@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import org.example.asteroides.logic.AlmacenPuntuacionesFicheroExterno;
 import org.example.asteroides.logic.AlmacenPuntuacionesFicheroExternoExtApl;
-import org.example.asteroides.logic.AlmacenPuntuacionesFicheroInterno;
+import org.example.asteroides.logic.PointsStorageInternalFile;
 import org.example.asteroides.logic.AlmacenPuntuacionesGSon;
 import org.example.asteroides.logic.AlmacenPuntuacionesJson;
 import org.example.asteroides.logic.PointsStoragePreferences;
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
                 pointsStorage = new PointsStoragePreferences(this);
                 break;
             case 2:
-                pointsStorage = new AlmacenPuntuacionesFicheroInterno(this);
+                pointsStorage = new PointsStorageInternalFile(this);
                 break;
             case 3:
                 pointsStorage = new AlmacenPuntuacionesFicheroExterno(this);
