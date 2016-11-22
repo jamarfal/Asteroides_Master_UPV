@@ -34,7 +34,7 @@ public class GameView extends View implements SensorEventListener
 
     ////// ASTEROIDES //////
     private Vector<Asteroid> asteroids; // Vector con los Asteroides
-    private int numAsteroids = 5; // Número inicial de asteroids
+    private int numAsteroids = 1; // Número inicial de asteroids
     /////// SHIP //////
     private Ship ship;
     ////// THREAD Y TIEMPO //////
@@ -248,7 +248,7 @@ public class GameView extends View implements SensorEventListener
             int numFragments = asteroidToDestroy.getNumFragments();
             for (int n = 0; n < numFragments; n++) {
                 GraphicGame graphicGameAsteroid = new GraphicGame(this, drawableAsteroid[tam]);
-                Asteroid asteroide = new Asteroid(graphicGameAsteroid, 2);
+                Asteroid asteroide = new Asteroid(graphicGameAsteroid, gamePreferences.getNumFragments());
 
                 asteroide.positionIn((int) asteroidToDestroy.getCenX(), (int) asteroidToDestroy.getCenY());
                 double velocity = Math.random() * 7 - 2 - tam;
@@ -261,8 +261,6 @@ public class GameView extends View implements SensorEventListener
 
             }
 
-            // Puntuación
-            puntuacion += 1000;
             // Sonido
             FxSoundPool.getInstance(context).explossion();
             // Eliminación Asteroide
@@ -273,7 +271,15 @@ public class GameView extends View implements SensorEventListener
             if (asteroids.isEmpty()) {
                 finishGame();
             }
+        }else{
+            // Eliminación Asteroide
+            synchronized (asteroids) {
+                asteroids.remove(i);
+            }
         }
+
+        // Puntuación
+        puntuacion += 1000;
     }
 
     private double calculateRetardation(long now) {
