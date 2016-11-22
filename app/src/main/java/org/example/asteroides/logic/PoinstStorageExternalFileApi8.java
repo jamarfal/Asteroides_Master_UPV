@@ -17,28 +17,26 @@ import java.util.Vector;
  * Created by jamarfal on 9/11/16.
  */
 
-public class AlmacenPuntuacionesFicheroExternoExtApl implements PointsStorage {
-    private static String FICHERO = Environment.getExternalStorageDirectory() + "/Android/data/org.example.asteroides/files/puntuaciones.txt";
+public class PoinstStorageExternalFileApi8 implements PointsStorage {
+    private static String FILE = Environment.getExternalStorageDirectory() + "/Android/data/org.example.asteroides/files/puntuaciones.txt";
     private Context context;
 
-    public AlmacenPuntuacionesFicheroExternoExtApl(Context context) {
+    public PoinstStorageExternalFileApi8(Context context) {
         this.context = context;
     }
 
     @Override
-    public void saveScore(int puntos, String nombre, long fecha) {
-        if (isExternalMemoryAvailable()) {
+    public void saveScore(int points, String name, long date) {
+        if (isExternalMemoryAvailableForWrite()) {
             FileOutputStream f = null;
-
-
             try {
-                File ruta = new File(FICHERO);
-                if (!ruta.exists()) {
-                    ruta.mkdirs();
+                File file = new File(FILE);
+                if (!file.exists()) {
+                    file.createNewFile();
                 }
 
-                f = new FileOutputStream(ruta, true);
-                String texto = puntos + " " + nombre + "\n";
+                f = new FileOutputStream(file, true);
+                String texto = points + " " + name + "\n";
                 f.write(texto.getBytes());
             } catch (Exception e) {
                 Log.e("Asteroides", e.getMessage(), e);
@@ -61,21 +59,20 @@ public class AlmacenPuntuacionesFicheroExternoExtApl implements PointsStorage {
         if (isExternalMemoryAvailable()) {
             FileInputStream f = null;
             try {
-                File ruta = new File(FICHERO);
-                if (!ruta.exists()) {
-                    ruta.mkdirs();
+                File ruta = new File(FILE);
+                if (ruta.exists()) {
+                    f = new FileInputStream(ruta);
+                    BufferedReader entrada = new BufferedReader(new InputStreamReader(f));
+                    int n = 0;
+                    String linea;
+                    do {
+                        linea = entrada.readLine();
+                        if (linea != null) {
+                            result.add(linea);
+                            n++;
+                        }
+                    } while (n < cantidad && linea != null);
                 }
-                f = new FileInputStream(ruta);
-                BufferedReader entrada = new BufferedReader(new InputStreamReader(f));
-                int n = 0;
-                String linea;
-                do {
-                    linea = entrada.readLine();
-                    if (linea != null) {
-                        result.add(linea);
-                        n++;
-                    }
-                } while (n < cantidad && linea != null);
 
             } catch (Exception e) {
                 Log.e("Asteroides", e.getMessage(), e);
@@ -97,5 +94,10 @@ public class AlmacenPuntuacionesFicheroExternoExtApl implements PointsStorage {
     public boolean isExternalMemoryAvailable() {
         String stateSd = Environment.getExternalStorageState();
         return stateSd.equalsIgnoreCase(Environment.MEDIA_MOUNTED);
+    }
+
+    public boolean isExternalMemoryAvailableForWrite() {
+        String stateSd = Environment.getExternalStorageState();
+        return stateSd.equalsIgnoreCase(Environment.MEDIA_MOUNTED) && !stateSd.equalsIgnoreCase(Environment.MEDIA_MOUNTED_READ_ONLY);
     }
 }

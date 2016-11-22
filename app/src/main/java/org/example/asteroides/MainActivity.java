@@ -28,7 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.example.asteroides.logic.PointsStorageExternalFile;
-import org.example.asteroides.logic.AlmacenPuntuacionesFicheroExternoExtApl;
+import org.example.asteroides.logic.PoinstStorageExternalFileApi8;
 import org.example.asteroides.logic.PointsStorageInternalFile;
 import org.example.asteroides.logic.AlmacenPuntuacionesGSon;
 import org.example.asteroides.logic.AlmacenPuntuacionesJson;
@@ -47,7 +47,9 @@ import org.example.asteroides.preferences.GamePreferences;
 import org.example.asteroides.service.ServicioMusica;
 import org.example.asteroides.view.GameView;
 
+
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity implements GestureOverlayView.OnGesturePerformedListener {
 
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     public static PointsStorage pointsStorage;
     private GamePreferences gamePreferences;
     private int score;
+    private final int[] STORE_FILE_MODES = {2, 3, 4, 5, 6, 7, 8, 9};
 
 
     //region Life Cycle methods
@@ -135,11 +138,15 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             score = data.getExtras().getInt(GameView.POINTS);
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                saveScore();
+            if (shouldRequestWriteExternalStoragePermission()) {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    saveScore();
+                } else {
+                    String message = "Sin el permiso de escritura en la memoria externa no se pueden almacenar puntuaciones";
+                    requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, message, WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST, this);
+                }
             } else {
-                String message = "Sin el permiso de escritura en la memoria externa no se pueden almacenar puntuaciones";
-                requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, message, WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST, this);
+                saveScore();
             }
         }
     }
@@ -247,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
                 pointsStorage = new PointsStorageExternalFile(this);
                 break;
             case 4:
-                pointsStorage = new AlmacenPuntuacionesFicheroExternoExtApl(this);
+                pointsStorage = new PoinstStorageExternalFileApi8(this);
                 break;
             case 5:
                 pointsStorage = new PointsStorageRawResources(this);
@@ -348,12 +355,18 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     }
 
     public void throwScoreActivity(View view) {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            goToScoreActivity();
+        if (shouldRequestWriteExternalStoragePermission()) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                goToScoreActivity();
+            } else {
+                String message = "Sin el permiso de escritura en la memoria externa no se pueden almacenar puntuaciones";
+                requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, message, READ_EXTERNAL_STORAGE_PERMISSION_REQUEST, this);
+            }
         } else {
-            String message = "Sin el permiso de escritura en la memoria externa no se pueden almacenar puntuaciones";
-            requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, message, READ_EXTERNAL_STORAGE_PERMISSION_REQUEST, this);
+            goToScoreActivity();
         }
+
+
     }
 
     private void goToScoreActivity() {
@@ -403,6 +416,12 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     private void saveScore() {
         pointsStorage.saveScore(score, gamePreferences.getUserName(), System.currentTimeMillis());
         throwScoreActivity(null);
+    }
+
+    public boolean shouldRequestWriteExternalStoragePermission() {
+        int saveMethodType = gamePreferences.getSaveMethod();
+        Arrays.sort(STORE_FILE_MODES);
+        return Arrays.binarySearch(STORE_FILE_MODES, saveMethodType) != -1;
     }
 
 }
