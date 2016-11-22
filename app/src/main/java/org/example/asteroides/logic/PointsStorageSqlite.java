@@ -11,8 +11,8 @@ import java.util.Vector;
  * Created by jamarfal on 14/11/16.
  */
 
-public class AlmacenPuntuacionesSQLite extends SQLiteOpenHelper implements PointsStorage {
-    public AlmacenPuntuacionesSQLite(Context context) {
+public class PointsStorageSqlite extends SQLiteOpenHelper implements PointsStorage {
+    public PointsStorageSqlite(Context context) {
         super(context, "puntuaciones", null, 1);
     }
 
@@ -32,21 +32,21 @@ public class AlmacenPuntuacionesSQLite extends SQLiteOpenHelper implements Point
 
     //Métodos de AlmacenPuntuaciones
     @Override
-    public void saveScore(int puntos, String nombre,
-                          long fecha) {
+    public void saveScore(int points, String name,
+                          long date) {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("INSERT INTO puntuaciones VALUES ( null, " +
-                puntos + ", '" + nombre + "', " + fecha + ")");
+                points + ", '" + name + "', " + date + ")");
         db.close();
     }
 
     @Override
-    public Vector<String> scoreList(int cantidad) {
+    public Vector<String> scoreList(int amount) {
         Vector<String> result = new Vector<String>();
         SQLiteDatabase db = getReadableDatabase();
-        String[] CAMPOS = {"puntos", "nombre"};
-        Cursor cursor = db.query("puntuaciones", CAMPOS, null, null,
-                null, null, "puntos DESC", Integer.toString(cantidad));
+        String[] FIELDS = {"puntos", "nombre"};
+        Cursor cursor = db.query("puntuaciones", FIELDS, null, null,
+                null, null, "puntos DESC", Integer.toString(amount));
         while (cursor.moveToNext()) {
             result.add(cursor.getInt(0) + " " + cursor.getString(1));
         }
