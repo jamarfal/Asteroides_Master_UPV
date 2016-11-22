@@ -22,36 +22,35 @@ import java.util.Vector;
  * Created by jamarfal on 14/11/16.
  */
 
-public class AlmacenPuntuacionesGSon implements PointsStorage {
+public class PointsStorageGson implements PointsStorage {
 
     private String string;
-    private Clase objeto = new Clase();
+    private ParserClass object = new ParserClass();
     private Gson gson = new Gson();
-    private static String FICHERO = Environment.getExternalStorageDirectory() + "/puntuaciones.txt";
+    private static String FILE = Environment.getExternalStorageDirectory() + "/puntuaciones.txt";
 
-    private Type type = new TypeToken<Clase>() {
+    private Type type = new TypeToken<ParserClass>() {
     }.getType();
     private Context context;
 
-    public AlmacenPuntuacionesGSon(Context context) {
+    public PointsStorageGson(Context context) {
         this.context = context;
-        this.objeto = getObjetoFromJson();
+        this.object = getObjetoFromJson();
     }
 
     @Override
-    public void saveScore(int puntos, String nombre, long fecha) {
-        this.objeto.puntuaciones.add(new Puntuacion(puntos, nombre, fecha));
-        string = gson.toJson(this.objeto, type);
-        guardarString();
+    public void saveScore(int points, String name, long date) {
+        this.object.puntuaciones.add(new Puntuacion(points, name, date));
+        string = gson.toJson(this.object, type);
+        saveString();
     }
 
 
-    private void guardarString() {
-        if (isExternalMemoryAvailable()) {
+    private void saveString() {
+        if (isExternalMemoryAvailableForWrite()) {
             FileOutputStream f = null;
-            File file = null;
             try {
-                file = new File(FICHERO);
+                File file = new File(FILE);
                 if (!file.exists()) {
                     file.createNewFile();
                 }
@@ -73,23 +72,22 @@ public class AlmacenPuntuacionesGSon implements PointsStorage {
 
     @Override
     public Vector<String> scoreList(int cantidad) {
-        string = leerString();
+        string = readString();
         Vector<String> salida = new Vector<>();
-        this.objeto = getObjetoFromJson();
-        for (Puntuacion puntuacion : this.objeto.puntuaciones) {
+        this.object = getObjetoFromJson();
+        for (Puntuacion puntuacion : this.object.puntuaciones) {
             salida.add(puntuacion.getPuntos() + " " + puntuacion.getNombre());
         }
 
         return salida;
     }
 
-    private String leerString() {
+    private String readString() {
         String result = "";
         if (isExternalMemoryAvailable()) {
             FileInputStream f = null;
-            File file = null;
             try {
-                file = new File(FICHERO);
+                File file = new File(FILE);
                 if (file.exists()) {
                     f = new FileInputStream(file);
                     BufferedReader entrada = new BufferedReader(new InputStreamReader(f));
@@ -119,27 +117,33 @@ public class AlmacenPuntuacionesGSon implements PointsStorage {
         return result;
     }
 
+    private ParserClass getObjetoFromJson() {
+        ParserClass parserClass = new ParserClass();
+        string = readString();
+        try {
+            if (string != null && !string.isEmpty()) {
+                parserClass = gson.fromJson(string, type);
+            }
+        } catch (Exception exception) {
+            Log.e("Asteroides", exception.getMessage(), exception);
+        }
+        return parserClass;
+    }
+
+    public class ParserClass {
+        private ArrayList<Puntuacion> puntuaciones = new ArrayList<>();
+        private boolean guardado;
+    }
+
+
     public boolean isExternalMemoryAvailable() {
         String stateSd = Environment.getExternalStorageState();
         return stateSd.equalsIgnoreCase(Environment.MEDIA_MOUNTED);
     }
 
-    private Clase getObjetoFromJson() {
-        Clase clase = new Clase();
-        string = leerString();
-        try {
-            if (string != null && !string.isEmpty()) {
-                clase = gson.fromJson(string, type);
-            }
-        } catch (Exception exception) {
-            Log.e("Asteroides", exception.getMessage(), exception);
-        }
-        return clase;
-    }
-
-    public class Clase {
-        private ArrayList<Puntuacion> puntuaciones = new ArrayList<>();
-        private boolean guardado;
+    public boolean isExternalMemoryAvailableForWrite() {
+        String stateSd = Environment.getExternalStorageState();
+        return stateSd.equalsIgnoreCase(Environment.MEDIA_MOUNTED) && !stateSd.equalsIgnoreCase(Environment.MEDIA_MOUNTED_READ_ONLY);
     }
 
 }

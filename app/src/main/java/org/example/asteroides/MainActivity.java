@@ -30,7 +30,7 @@ import android.widget.Toast;
 import org.example.asteroides.logic.PointsStorageExternalFile;
 import org.example.asteroides.logic.PoinstStorageExternalFileApi8;
 import org.example.asteroides.logic.PointsStorageInternalFile;
-import org.example.asteroides.logic.AlmacenPuntuacionesGSon;
+import org.example.asteroides.logic.PointsStorageGson;
 import org.example.asteroides.logic.AlmacenPuntuacionesJson;
 import org.example.asteroides.logic.PointsStoragePreferences;
 import org.example.asteroides.logic.AlmacenPuntuacionesProvider;
@@ -48,9 +48,7 @@ import org.example.asteroides.service.ServicioMusica;
 import org.example.asteroides.view.GameView;
 
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity implements GestureOverlayView.OnGesturePerformedListener {
 
@@ -267,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
                 pointsStorage = new PointsStorageXML_SAX(this);
                 break;
             case 8:
-                pointsStorage = new AlmacenPuntuacionesGSon(this);
+                pointsStorage = new PointsStorageGson(this);
                 break;
             case 9:
                 pointsStorage = new AlmacenPuntuacionesJson(this);
