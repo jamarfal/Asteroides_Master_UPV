@@ -46,4 +46,6 @@ principal.</string>
     <string name="title_control_preferences">Tipo de control</string>
     <string name="summary_save_method_preferences">En que formato se guardará la puntuación</string>
     <string name="title_save_method_preferences">Método de Guardar Puntuación</string>
+    <string name="summary_username_preferences">Nombre de usuario para guardar la puntuación</string>
+    <string name="title_username_preferences">Nombre de usuario</string>
 </resources>

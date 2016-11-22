@@ -81,6 +81,17 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().permitNetwork().build());
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            int puntuacion = data.getExtras().getInt(GameView.POINTS);
+            // Mejor leer nombre desde un AlertDialog.Builder o preferencias
+            pointsStorage.saveScore(puntuacion, gamePreferences.getUserName(), System.currentTimeMillis());
+            throwScoreActivity(null);
+        }
+    }
+
     private void initMusic() {
         startService(new Intent(MainActivity.this, ServicioMusica.class));
     }
@@ -175,8 +186,6 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     protected void onDestroy() {
         super.onDestroy();
     }
-    //endregion
-
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -197,6 +206,7 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
 //        }
 
     }
+    //endregion
 
     //region Init methods
     private void initViews() {
@@ -315,23 +325,10 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     }
     //endregion
 
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            int puntuacion = data.getExtras().getInt(GameView.POINTS);
-            String nombre = "Yo";
-            // Mejor leer nombre desde un AlertDialog.Builder o preferencias
-            pointsStorage.saveScore(puntuacion, nombre, System.currentTimeMillis());
-            throwScoreActivity(null);
-        }
-    }
-
     //region Show Preferences Values method
     public void showPreferences() {
-        GamePreferences gamePreferences = new GamePreferences(this);
         String s = " Música: " + gamePreferences.playMusic()
+                + "\n Usuario: " + gamePreferences.getUserName()
                 + "\n Gráficos: " + getResources().getStringArray(R.array.graphicTypes)[gamePreferences.getGraphicType()]
                 + "\n Fragmentos: " + gamePreferences.getNumFragments()
                 + "\n Activar Multiplayer: " + gamePreferences.isMultiplayer()

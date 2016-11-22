@@ -19,6 +19,7 @@ public class GamePreferences {
     public final static String KEY_CONNECTION_TYPE = "connection_type";
     public static final String KEY_CONTROLLER = "controller";
     public static final String KEY_SAVE_METHOD = "saveMethods";
+    public static final String KEY_USER_NAME = "user_name";
 
     public GamePreferences(Context context) {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -80,5 +81,9 @@ public class GamePreferences {
 
     public boolean playerHasSelectedTouchontrol() {
         return sharedPreferences.getString(KEY_CONTROLLER, "2").equalsIgnoreCase("2");
+    }
+
+    public String getUserName() {
+        return sharedPreferences.getString(KEY_USER_NAME, "N/A");
     }
 }

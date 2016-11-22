@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="main_preferences">
+
+    <EditTextPreference
+        android:defaultValue="User name"
+        android:inputType="text"
+        android:key="user_name"
+        android:summary="@string/summary_username_preferences"
+        android:title="@string/title_username_preferences" />
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="music"
