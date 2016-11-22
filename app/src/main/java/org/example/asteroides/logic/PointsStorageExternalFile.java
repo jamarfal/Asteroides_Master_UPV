@@ -17,26 +17,25 @@ import java.util.Vector;
  * Created by jamarfal on 9/11/16.
  */
 
-public class AlmacenPuntuacionesFicheroExterno implements PointsStorage {
-    private static String FICHERO = Environment.getExternalStorageDirectory() + "/puntuaciones.txt";
+public class PointsStorageExternalFile implements PointsStorage {
+    private static String FILE = Environment.getExternalStorageDirectory() + "/puntuaciones.txt";
     private Context context;
 
-    public AlmacenPuntuacionesFicheroExterno(Context context) {
+    public PointsStorageExternalFile(Context context) {
         this.context = context;
     }
 
     @Override
-    public void saveScore(int puntos, String nombre, long fecha) {
-        if (isExternalMemoryAvailable()) {
+    public void saveScore(int points, String name, long date) {
+        if (isExternalMemoryAvailableForWrite()) {
             FileOutputStream f = null;
-            File file = null;
             try {
-                file = new File(FICHERO);
+                File file = new File(FILE);
                 if (!file.exists()) {
-                    file.mkdirs();
+                    file.createNewFile();
                 }
                 f = new FileOutputStream(file, true);
-                String texto = puntos + " " + nombre + "\n";
+                String texto = points + " " + name + "\n";
                 f.write(texto.getBytes());
             } catch (Exception e) {
                 Log.e("Asteroides", e.getMessage(), e);
@@ -58,21 +57,20 @@ public class AlmacenPuntuacionesFicheroExterno implements PointsStorage {
         Vector<String> result = new Vector<String>();
         if (isExternalMemoryAvailable()) {
             FileInputStream f = null;
-            File file = null;
             try {
-                file = new File(FICHERO);
+                File file = new File(FILE);
                 if (file.exists()) {
                     f = new FileInputStream(file);
-                    BufferedReader entrada = new BufferedReader(new InputStreamReader(f));
+                    BufferedReader input = new BufferedReader(new InputStreamReader(f));
                     int n = 0;
-                    String linea;
+                    String line;
                     do {
-                        linea = entrada.readLine();
-                        if (linea != null) {
-                            result.add(linea);
+                        line = input.readLine();
+                        if (line != null) {
+                            result.add(line);
                             n++;
                         }
-                    } while (n < cantidad && linea != null);
+                    } while (n < cantidad && line != null);
                 }
             } catch (Exception e) {
                 Log.e("Asteroides", e.getMessage(), e);
@@ -94,5 +92,10 @@ public class AlmacenPuntuacionesFicheroExterno implements PointsStorage {
     public boolean isExternalMemoryAvailable() {
         String stateSd = Environment.getExternalStorageState();
         return stateSd.equalsIgnoreCase(Environment.MEDIA_MOUNTED);
+    }
+
+    public boolean isExternalMemoryAvailableForWrite() {
+        String stateSd = Environment.getExternalStorageState();
+        return stateSd.equalsIgnoreCase(Environment.MEDIA_MOUNTED) && !stateSd.equalsIgnoreCase(Environment.MEDIA_MOUNTED_READ_ONLY);
     }
 }

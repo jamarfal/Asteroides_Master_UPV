@@ -1,12 +1,20 @@
 package org.example.asteroides;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.gesture.Gesture;
 import android.gesture.GestureLibraries;
 import android.gesture.GestureLibrary;
 import android.gesture.GestureOverlayView;
 import android.gesture.Prediction;
 import android.os.StrictMode;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -19,7 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.example.asteroides.logic.AlmacenPuntuacionesFicheroExterno;
+import org.example.asteroides.logic.PointsStorageExternalFile;
 import org.example.asteroides.logic.AlmacenPuntuacionesFicheroExternoExtApl;
 import org.example.asteroides.logic.PointsStorageInternalFile;
 import org.example.asteroides.logic.AlmacenPuntuacionesGSon;
@@ -44,6 +52,8 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements GestureOverlayView.OnGesturePerformedListener {
 
     public static final String SONG_POSITION_TIME = "song_position_time";
+    private static final int WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST = 1232;
+    private static final int READ_EXTERNAL_STORAGE_PERMISSION_REQUEST = 1233;
     public static final int REQUEST_CODE = 1234;
     private Button aboutButton, scoreButon, playButton, configButton;
     private TextView gameTitleTextView;
@@ -53,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     private GestureLibrary gestureLibrary;
     public static PointsStorage pointsStorage;
     private GamePreferences gamePreferences;
+    private int score;
 
 
     //region Life Cycle methods
@@ -81,24 +92,6 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            int score = data.getExtras().getInt(GameView.POINTS);
-            pointsStorage.saveScore(score, gamePreferences.getUserName(), System.currentTimeMillis());
-            throwScoreActivity(null);
-        }
-    }
-
-    private void initMusic() {
-        startService(new Intent(MainActivity.this, ServicioMusica.class));
-    }
-
-    private void stopMusic() {
-        stopService(new Intent(MainActivity.this, ServicioMusica.class));
-    }
-
-    @Override
     protected void onStart() {
         super.onStart();
     }
@@ -112,56 +105,6 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
         initSaveMethod();
     }
 
-    private void initSaveMethod() {
-        int saveMethodType = gamePreferences.getSaveMethod();
-        switch (saveMethodType) {
-            case 0:
-                pointsStorage = new PointsStorageArray();
-                break;
-            case 1:
-                pointsStorage = new PointsStoragePreferences(this);
-                break;
-            case 2:
-                pointsStorage = new PointsStorageInternalFile(this);
-                break;
-            case 3:
-                pointsStorage = new AlmacenPuntuacionesFicheroExterno(this);
-                break;
-            case 4:
-                pointsStorage = new AlmacenPuntuacionesFicheroExternoExtApl(this);
-                break;
-            case 5:
-                pointsStorage = new AlmacenPuntuacionesRecursosRaw(this);
-                break;
-            case 6:
-                pointsStorage = new AlmacenPuntuacionesRecursosAssets(this);
-                break;
-            case 7:
-                pointsStorage = new PointsStorageXML_SAX(this);
-                break;
-            case 8:
-                pointsStorage = new AlmacenPuntuacionesGSon(this);
-                break;
-            case 9:
-                pointsStorage = new AlmacenPuntuacionesJson(this);
-                break;
-            case 10:
-                pointsStorage = new AlmacenPuntuacionesSQLiteRel(this);
-                break;
-            case 11:
-                pointsStorage = new AlmacenPuntuacionesProvider(this);
-                break;
-            case 12:
-                pointsStorage = new AlmacenPuntuacionesSocket();
-                break;
-            case 13:
-                pointsStorage = new AlmacenPuntuacionesSW_PHP();
-                break;
-            case 14:
-                pointsStorage = new AlmacenPuntuacionesSW_PHP_AsyncTask(this);
-                break;
-        }
-    }
 
     @Override
     protected void onPause() {
@@ -183,6 +126,39 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+    //endregion
+
+    //region Overrided methods
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            score = data.getExtras().getInt(GameView.POINTS);
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                saveScore();
+            } else {
+                String message = "Sin el permiso de escritura en la memoria externa no se pueden almacenar puntuaciones";
+                requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, message, WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST, this);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                saveScore();
+            } else {
+                Toast.makeText(this, "Sin el permiso de escribir en la memoria externa no se pueden almacenar puntuaciones", Toast.LENGTH_LONG).show();
+            }
+        } else if (requestCode == READ_EXTERNAL_STORAGE_PERMISSION_REQUEST) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                goToScoreActivity();
+            } else {
+                Toast.makeText(this, "Sin el permiso de escribir en la memoria externa no se pueden leer puntuaciones", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     @Override
@@ -254,6 +230,65 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
         scoreButon.startAnimation(translationLeft);
         asteroidInRotation.startAnimation(loopRotation);
     }
+
+    private void initSaveMethod() {
+        int saveMethodType = gamePreferences.getSaveMethod();
+        switch (saveMethodType) {
+            case 0:
+                pointsStorage = new PointsStorageArray();
+                break;
+            case 1:
+                pointsStorage = new PointsStoragePreferences(this);
+                break;
+            case 2:
+                pointsStorage = new PointsStorageInternalFile(this);
+                break;
+            case 3:
+                pointsStorage = new PointsStorageExternalFile(this);
+                break;
+            case 4:
+                pointsStorage = new AlmacenPuntuacionesFicheroExternoExtApl(this);
+                break;
+            case 5:
+                pointsStorage = new AlmacenPuntuacionesRecursosRaw(this);
+                break;
+            case 6:
+                pointsStorage = new AlmacenPuntuacionesRecursosAssets(this);
+                break;
+            case 7:
+                pointsStorage = new PointsStorageXML_SAX(this);
+                break;
+            case 8:
+                pointsStorage = new AlmacenPuntuacionesGSon(this);
+                break;
+            case 9:
+                pointsStorage = new AlmacenPuntuacionesJson(this);
+                break;
+            case 10:
+                pointsStorage = new AlmacenPuntuacionesSQLiteRel(this);
+                break;
+            case 11:
+                pointsStorage = new AlmacenPuntuacionesProvider(this);
+                break;
+            case 12:
+                pointsStorage = new AlmacenPuntuacionesSocket();
+                break;
+            case 13:
+                pointsStorage = new AlmacenPuntuacionesSW_PHP();
+                break;
+            case 14:
+                pointsStorage = new AlmacenPuntuacionesSW_PHP_AsyncTask(this);
+                break;
+        }
+    }
+
+    private void initMusic() {
+        startService(new Intent(MainActivity.this, ServicioMusica.class));
+    }
+
+    private void stopMusic() {
+        stopService(new Intent(MainActivity.this, ServicioMusica.class));
+    }
     //endregion
 
     //region Menu methods
@@ -313,6 +348,15 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     }
 
     public void throwScoreActivity(View view) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            goToScoreActivity();
+        } else {
+            String message = "Sin el permiso de escritura en la memoria externa no se pueden almacenar puntuaciones";
+            requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, message, READ_EXTERNAL_STORAGE_PERMISSION_REQUEST, this);
+        }
+    }
+
+    private void goToScoreActivity() {
         Intent intent = new Intent(this, ScoreActivity.class);
         startActivity(intent);
     }
@@ -338,5 +382,29 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     }
     //endregion
 
+    //region Permission
+    private void requestPermission(final String permission, String justication, final int code, final Activity activity) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
+            new AlertDialog.Builder(activity)
+                    .setTitle("Solicitud de permiso")
+                    .setMessage(justication)
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            ActivityCompat.requestPermissions(activity, new String[]{permission}, code);
+                        }
+                    })
+                    .show();
+        } else {
+            ActivityCompat.requestPermissions(activity, new String[]{permission}, code);
+        }
+    }
+    //endregion
+
+    private void saveScore() {
+        pointsStorage.saveScore(score, gamePreferences.getUserName(), System.currentTimeMillis());
+        throwScoreActivity(null);
+    }
 
 }
+
+
