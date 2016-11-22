@@ -24,11 +24,10 @@ import org.example.asteroides.logic.AlmacenPuntuacionesFicheroExternoExtApl;
 import org.example.asteroides.logic.AlmacenPuntuacionesFicheroInterno;
 import org.example.asteroides.logic.AlmacenPuntuacionesGSon;
 import org.example.asteroides.logic.AlmacenPuntuacionesJson;
-import org.example.asteroides.logic.AlmacenPuntuacionesPreferencias;
+import org.example.asteroides.logic.PointsStoragePreferences;
 import org.example.asteroides.logic.AlmacenPuntuacionesProvider;
 import org.example.asteroides.logic.AlmacenPuntuacionesRecursosAssets;
 import org.example.asteroides.logic.AlmacenPuntuacionesRecursosRaw;
-import org.example.asteroides.logic.AlmacenPuntuacionesSQLite;
 import org.example.asteroides.logic.AlmacenPuntuacionesSQLiteRel;
 import org.example.asteroides.logic.AlmacenPuntuacionesSW_PHP;
 import org.example.asteroides.logic.AlmacenPuntuacionesSW_PHP_AsyncTask;
@@ -120,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
                 pointsStorage = new PointsStorageArray();
                 break;
             case 1:
-                pointsStorage = new AlmacenPuntuacionesPreferencias(this);
+                pointsStorage = new PointsStoragePreferences(this);
                 break;
             case 2:
                 pointsStorage = new AlmacenPuntuacionesFicheroInterno(this);

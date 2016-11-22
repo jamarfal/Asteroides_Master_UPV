@@ -34,7 +34,7 @@ public class GameView extends View implements SensorEventListener
 
     ////// ASTEROIDES //////
     private Vector<Asteroid> asteroids; // Vector con los Asteroides
-    private int numAsteroids = 1; // Número inicial de asteroids
+    private int numAsteroids = 5; // Número inicial de asteroids
     /////// SHIP //////
     private Ship ship;
     ////// THREAD Y TIEMPO //////
