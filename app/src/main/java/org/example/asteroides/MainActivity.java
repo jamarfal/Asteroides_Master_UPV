@@ -34,7 +34,7 @@ import org.example.asteroides.logic.AlmacenPuntuacionesGSon;
 import org.example.asteroides.logic.AlmacenPuntuacionesJson;
 import org.example.asteroides.logic.PointsStoragePreferences;
 import org.example.asteroides.logic.AlmacenPuntuacionesProvider;
-import org.example.asteroides.logic.AlmacenPuntuacionesRecursosAssets;
+import org.example.asteroides.logic.PointsStorageAssetsResources;
 import org.example.asteroides.logic.PointsStorageRawResources;
 import org.example.asteroides.logic.AlmacenPuntuacionesSQLiteRel;
 import org.example.asteroides.logic.AlmacenPuntuacionesSW_PHP;
@@ -48,6 +48,7 @@ import org.example.asteroides.service.ServicioMusica;
 import org.example.asteroides.view.GameView;
 
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     public static PointsStorage pointsStorage;
     private GamePreferences gamePreferences;
     private int score;
-    private final int[] STORE_FILE_MODES = {2, 3, 4, 5, 6, 7, 8, 9};
+    private final int[] STORE_FILE_MODES = {2, 3, 4, 7, 8, 9};
 
 
     //region Life Cycle methods
@@ -260,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
                 pointsStorage = new PointsStorageRawResources(this);
                 break;
             case 6:
-                pointsStorage = new AlmacenPuntuacionesRecursosAssets(this);
+                pointsStorage = new PointsStorageAssetsResources(this);
                 break;
             case 7:
                 pointsStorage = new PointsStorageXML_SAX(this);
@@ -420,8 +421,13 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
 
     public boolean shouldRequestWriteExternalStoragePermission() {
         int saveMethodType = gamePreferences.getSaveMethod();
-        Arrays.sort(STORE_FILE_MODES);
-        return Arrays.binarySearch(STORE_FILE_MODES, saveMethodType) != -1;
+        boolean found = false;
+        for (int i = 0; i < STORE_FILE_MODES.length && !found; i++) {
+            if (STORE_FILE_MODES[i] == saveMethodType) {
+                found = true;
+            }
+        }
+        return found;
     }
 
 }

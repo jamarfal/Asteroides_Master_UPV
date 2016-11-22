@@ -15,19 +15,19 @@ import java.util.Vector;
  * Created by jamarfal on 9/11/16.
  */
 
-public class AlmacenPuntuacionesRecursosAssets implements PointsStorage {
+public class PointsStorageAssetsResources implements PointsStorage {
     private Context context;
 
-    public AlmacenPuntuacionesRecursosAssets(Context context) {
+    public PointsStorageAssetsResources(Context context) {
         this.context = context;
     }
 
     @Override
-    public void saveScore(int puntos, String nombre, long fecha) {
+    public void saveScore(int points, String name, long date) {
     }
 
     @Override
-    public Vector<String> scoreList(int cantidad) {
+    public Vector<String> scoreList(int amount) {
         Vector<String> result = new Vector<String>();
         InputStream f = null;
         try {
@@ -41,7 +41,7 @@ public class AlmacenPuntuacionesRecursosAssets implements PointsStorage {
                     result.add(linea);
                     n++;
                 }
-            } while (n < cantidad && linea != null);
+            } while (n < amount && linea != null);
 
         } catch (Exception e) {
             Log.e("Asteroides", e.getMessage(), e);
