@@ -85,9 +85,8 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            int puntuacion = data.getExtras().getInt(GameView.POINTS);
-            // Mejor leer nombre desde un AlertDialog.Builder o preferencias
-            pointsStorage.saveScore(puntuacion, gamePreferences.getUserName(), System.currentTimeMillis());
+            int score = data.getExtras().getInt(GameView.POINTS);
+            pointsStorage.saveScore(score, gamePreferences.getUserName(), System.currentTimeMillis());
             throwScoreActivity(null);
         }
     }
