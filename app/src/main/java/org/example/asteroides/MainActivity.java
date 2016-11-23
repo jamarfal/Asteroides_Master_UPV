@@ -31,7 +31,7 @@ import org.example.asteroides.logic.PointsStorageExternalFile;
 import org.example.asteroides.logic.PoinstStorageExternalFileApi8;
 import org.example.asteroides.logic.PointsStorageInternalFile;
 import org.example.asteroides.logic.PointsStorageGson;
-import org.example.asteroides.logic.AlmacenPuntuacionesJson;
+import org.example.asteroides.logic.PoinstStorageJson;
 import org.example.asteroides.logic.PointsStoragePreferences;
 import org.example.asteroides.logic.AlmacenPuntuacionesProvider;
 import org.example.asteroides.logic.PointsStorageAssetsResources;
@@ -268,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
                 pointsStorage = new PointsStorageGson(this);
                 break;
             case 9:
-                pointsStorage = new AlmacenPuntuacionesJson(this);
+                pointsStorage = new PoinstStorageJson(this);
                 break;
             case 10:
                 pointsStorage = new AlmacenPuntuacionesSQLiteRel(this);
