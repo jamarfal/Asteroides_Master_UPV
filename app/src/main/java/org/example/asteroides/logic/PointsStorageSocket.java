@@ -14,26 +14,27 @@ import java.util.Vector;
  * Created by jamarfal on 21/11/16.
  */
 
-public class AlmacenPuntuacionesSocket implements PointsStorage {
+public class PointsStorageSocket implements PointsStorage {
 
-    private static final String SERVIDOR = "158.42.146.127";
+    private static final String SERVER = "158.42.146.127";
+    public static final int PORT = 1234;
 
-    public AlmacenPuntuacionesSocket() {
+    public PointsStorageSocket() {
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().permitNetwork().build());
     }
 
 
     @Override
-    public void saveScore(int puntos, String nombre, long fecha) {
+    public void saveScore(int points, String name, long date) {
         try {
-            Socket sk = new Socket(SERVIDOR, 1234);
-            BufferedReader entrada = new BufferedReader(
+            Socket sk = new Socket(SERVER, 1234);
+            BufferedReader input = new BufferedReader(
                     new InputStreamReader(sk.getInputStream()));
-            PrintWriter salida = new PrintWriter(
+            PrintWriter output = new PrintWriter(
                     new OutputStreamWriter(sk.getOutputStream()), true);
-            salida.println(puntos + " " + nombre);
-            String respuesta = entrada.readLine();
-            if (!respuesta.equals("OK")) {
+            output.println(points + " " + name);
+            String response = input.readLine();
+            if (!response.equals("OK")) {
                 Log.e("Asteroides", "Error: respuesta de servidor incorrecta");
             }
             sk.close();
@@ -43,24 +44,24 @@ public class AlmacenPuntuacionesSocket implements PointsStorage {
     }
 
     @Override
-    public Vector<String> scoreList(int cantidad) {
+    public Vector<String> scoreList(int amount) {
         Vector<String> result = new Vector<String>();
         try {
-            Socket sk = new Socket(SERVIDOR, 1234);
-            BufferedReader entrada = new BufferedReader(
+            Socket sk = new Socket(SERVER, PORT);
+            BufferedReader input = new BufferedReader(
                     new InputStreamReader(sk.getInputStream()));
-            PrintWriter salida = new PrintWriter(
+            PrintWriter output = new PrintWriter(
                     new OutputStreamWriter(sk.getOutputStream()), true);
-            salida.println("PUNTUACIONES");
+            output.println("PUNTUACIONES");
             int n = 0;
-            String respuesta;
+            String response;
             do {
-                respuesta = entrada.readLine();
-                if (respuesta != null) {
-                    result.add(respuesta);
+                response = input.readLine();
+                if (response != null) {
+                    result.add(response);
                     n++;
                 }
-            } while (n < cantidad && respuesta != null);
+            } while (n < amount && response != null);
             sk.close();
         } catch (Exception e) {
             Log.e("Asteroides", e.toString(), e);
