@@ -52,8 +52,9 @@
         <item>SQLITE</item>
         <item>ContentProvider</item>
         <item>Socket</item>
-        <item>Servicio Web</item>
-        <item>Servicio Web AsyncTask</item>
+        <item>Servicio Web UPV</item>
+        <item>Servicio Web Propio</item>
+        <item>Servicio Web Propio con AsyncTask</item>
     </string-array>
 
     <string-array name="saveMethodsTypesValues">
@@ -72,5 +73,6 @@
         <item>12</item>
         <item>13</item>
         <item>14</item>
+        <item>15</item>
     </string-array>
 </resources>

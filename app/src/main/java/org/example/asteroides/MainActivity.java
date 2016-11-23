@@ -37,8 +37,8 @@ import org.example.asteroides.logic.PointsStorageProvider;
 import org.example.asteroides.logic.PointsStorageAssetsResources;
 import org.example.asteroides.logic.PointsStorageRawResources;
 import org.example.asteroides.logic.PointsStorageSqliteRel;
-import org.example.asteroides.logic.AlmacenPuntuacionesSW_PHP;
-import org.example.asteroides.logic.AlmacenPuntuacionesSW_PHP_AsyncTask;
+import org.example.asteroides.logic.PoinstStorageSW_PHP;
+import org.example.asteroides.logic.PointsStorageSW_PHP_Asynctask;
 import org.example.asteroides.logic.PointsStorageSocket;
 import org.example.asteroides.logic.PointsStorage;
 import org.example.asteroides.logic.PointsStorageArray;
@@ -280,10 +280,13 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
                 pointsStorage = new PointsStorageSocket();
                 break;
             case 13:
-                pointsStorage = new AlmacenPuntuacionesSW_PHP();
+                pointsStorage = new PoinstStorageSW_PHP("http://158.42.146.127/puntuaciones/");
                 break;
             case 14:
-                pointsStorage = new AlmacenPuntuacionesSW_PHP_AsyncTask(this);
+                pointsStorage = new PoinstStorageSW_PHP("http://asteroides.esy.es/asteroides/");
+                break;
+            case 15:
+                pointsStorage = new PointsStorageSW_PHP_Asynctask(this, "http://asteroides.esy.es/asteroides/");
                 break;
         }
     }

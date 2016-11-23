@@ -23,8 +23,6 @@ public class ServicioMusica extends Service {
 
     @Override
     public void onCreate() {
-        Toast.makeText(this, "Servicio creado",
-                Toast.LENGTH_SHORT).show();
         reproductor = MediaPlayer.create(this, R.raw.audio);
     }
 
@@ -40,7 +38,6 @@ public class ServicioMusica extends Service {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(ID_NOTIFICACION_CREAR, notific.build());
 
-        Toast.makeText(this, "Servicio arrancado " + idArranque, Toast.LENGTH_SHORT).show();
         reproductor.start();
         return START_STICKY;
     }
@@ -48,7 +45,6 @@ public class ServicioMusica extends Service {
 
     @Override
     public void onDestroy() {
-        Toast.makeText(this, "Servicio detenido", Toast.LENGTH_SHORT).show();
         reproductor.stop();
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(ID_NOTIFICACION_CREAR);

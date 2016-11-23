@@ -19,23 +19,24 @@ import java.util.concurrent.TimeoutException;
  * Created by jamarfal on 21/11/16.
  */
 
-public class AlmacenPuntuacionesSW_PHP_AsyncTask implements PointsStorage {
+public class PointsStorageSW_PHP_Asynctask implements PointsStorage {
 
-    private final String SERVER_URL = "http://asteroides.esy.es/asteroides/";
+    private String serverUrl;
     private Context context;
 
-    public AlmacenPuntuacionesSW_PHP_AsyncTask(Context context) {
+    public PointsStorageSW_PHP_Asynctask(Context context, String serverUrl) {
         this.context = context;
+        this.serverUrl = serverUrl;
     }
 
     @Override
-    public Vector<String> scoreList(int cantidad) {
+    public Vector<String> scoreList(int amount) {
 
 
         try {
-            TareaLista tarea = new TareaLista();
-            tarea.execute(cantidad);
-            return tarea.get(4, TimeUnit.SECONDS);
+            GetScoreFromServerTask task = new GetScoreFromServerTask();
+            task.execute(amount);
+            return task.get(4, TimeUnit.SECONDS);
         } catch (TimeoutException e) {
             Toast.makeText(context, "Tiempo excedido al conectar",
                     Toast.LENGTH_LONG).show();
@@ -50,12 +51,12 @@ public class AlmacenPuntuacionesSW_PHP_AsyncTask implements PointsStorage {
 
 
     @Override
-    public void saveScore(int puntos, String nombre, long fecha) {
+    public void saveScore(int points, String name, long date) {
         try {
-            TareaGuardar tarea = new TareaGuardar();
-            tarea.execute(String.valueOf(puntos), nombre,
-                    String.valueOf(fecha));
-            tarea.get(4, TimeUnit.SECONDS);
+            SaveScoreInServerTask task = new SaveScoreInServerTask();
+            task.execute(String.valueOf(points), name,
+                    String.valueOf(date));
+            task.get(4, TimeUnit.SECONDS);
         } catch (TimeoutException e) {
             Toast.makeText(context, "Tiempo excedido al conectar",
                     Toast.LENGTH_LONG).show();
@@ -66,43 +67,43 @@ public class AlmacenPuntuacionesSW_PHP_AsyncTask implements PointsStorage {
         }
     }
 
-    private class TareaLista extends AsyncTask<Integer, Void, Vector<String>> {
+    private class GetScoreFromServerTask extends AsyncTask<Integer, Void, Vector<String>> {
         @Override
-        protected Vector<String> doInBackground(Integer... cantidad) {
-            HttpURLConnection conexion = null;
+        protected Vector<String> doInBackground(Integer... amount) {
+            HttpURLConnection connection = null;
             Vector<String> result = new Vector<String>();
             try {
-                URL url = new URL(SERVER_URL + "lista.php?max=" + cantidad[0]);
-                conexion = (HttpURLConnection) url.openConnection();
-                if (conexion.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(conexion.getInputStream()));
-                    String linea = reader.readLine();
-                    while (!linea.equals("")) {
-                        result.add(linea);
-                        linea = reader.readLine();
+                URL url = new URL(serverUrl + "lista.php?max=" + amount[0]);
+                connection = (HttpURLConnection) url.openConnection();
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    String line = reader.readLine();
+                    while (!line.equals("")) {
+                        result.add(line);
+                        line = reader.readLine();
                     }
                     reader.close();
                 } else {
-                    Log.e("Asteroides", conexion.getResponseMessage());
+                    Log.e("Asteroides", connection.getResponseMessage());
                     cancel(true);
                 }
             } catch (Exception e) {
                 Log.e("Asteroides", e.getMessage(), e);
                 cancel(true);
             } finally {
-                if (conexion != null) conexion.disconnect();
-                return result;
+                if (connection != null) connection.disconnect();
             }
+            return result;
         }
     }
 
-    private class TareaGuardar extends AsyncTask<String, Void, Void> {
+    private class SaveScoreInServerTask extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... param) {
             HttpURLConnection conexion = null;
             try {
                 URL url = new URL(
-                        SERVER_URL + "nueva.php" + "?puntos=" + param[0] + "&nombre="
+                        serverUrl + "nueva.php" + "?puntos=" + param[0] + "&nombre="
                                 + URLEncoder.encode(param[1], "UTF-8")
                                 + "&fecha=" + param[2]);
                 conexion = (HttpURLConnection) url
