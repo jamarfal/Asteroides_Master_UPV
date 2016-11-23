@@ -13,22 +13,22 @@ import java.util.Vector;
  * Created by jamarfal on 14/11/16.
  */
 
-public class AlmacenPuntuacionesProvider implements PointsStorage {
+public class PointsStorageProvider implements PointsStorage {
 
     private Activity activity;
 
-    public AlmacenPuntuacionesProvider(Activity activity) {
+    public PointsStorageProvider(Activity activity) {
         this.activity = activity;
     }
 
     @Override
-    public void saveScore(int puntos, String nombre, long fecha) {
+    public void saveScore(int points, String name, long date) {
         Uri uri = Uri.parse(
                 "content://org.example.puntuacionesprovider/puntuaciones");
         ContentValues valores = new ContentValues();
-        valores.put("nombre", nombre);
-        valores.put("puntos", puntos);
-        valores.put("fecha", fecha);
+        valores.put("nombre", name);
+        valores.put("puntos", points);
+        valores.put("fecha", date);
         try {
             activity.getContentResolver().insert(uri, valores);
         } catch (Exception e) {
