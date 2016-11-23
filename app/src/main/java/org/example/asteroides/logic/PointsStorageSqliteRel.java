@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Point;
 
 import java.util.Vector;
 
@@ -12,9 +11,9 @@ import java.util.Vector;
  * Created by jamarfal on 14/11/16.
  */
 
-public class AlmacenPuntuacionesSQLiteRel extends SQLiteOpenHelper implements PointsStorage {
+public class PointsStorageSqliteRel extends SQLiteOpenHelper implements PointsStorage {
 
-    public AlmacenPuntuacionesSQLiteRel(Context context) {
+    public PointsStorageSqliteRel(Context context) {
         super(context, "puntuaciones", null, 2);
     }
 
@@ -49,12 +48,12 @@ public class AlmacenPuntuacionesSQLiteRel extends SQLiteOpenHelper implements Po
 
     //Métodos de AlmacenPuntuaciones
     @Override
-    public Vector<String> scoreList(int cantidad) {
+    public Vector<String> scoreList(int amou) {
         Vector<String> result = new Vector<String>();
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT puntos, nombre FROM "
                 + "puntuaciones2, usuarios WHERE usuario = usu_id ORDER BY "
-                + "puntos DESC LIMIT " + cantidad, null);
+                + "puntos DESC LIMIT " + amou, null);
         while (cursor.moveToNext()) {
             result.add(cursor.getInt(0) + " " + cursor.getString(1));
         }
@@ -64,31 +63,31 @@ public class AlmacenPuntuacionesSQLiteRel extends SQLiteOpenHelper implements Po
     }
 
     @Override
-    public void saveScore(int puntos, String nombre, long fecha) {
+    public void saveScore(int points, String name, long date) {
         SQLiteDatabase db = getWritableDatabase();
-        saveScore(db, puntos, nombre, fecha);
+        saveScore(db, points, name, date);
         db.close();
     }
 
-    public void saveScore(SQLiteDatabase db, int puntos, String nombre, long fecha) {
-        int usuario = buscaInserta(db, nombre);
+    public void saveScore(SQLiteDatabase db, int points, String name, long date) {
+        int usuario = buscaInserta(db, name);
         db.execSQL("PRAGMA foreign_keys = ON");
-        db.execSQL("INSERT INTO puntuaciones2 VALUES ( null, " + puntos + ", " + fecha + ", " + usuario + ")");
+        db.execSQL("INSERT INTO puntuaciones2 VALUES ( null, " + points + ", " + date + ", " + usuario + ")");
     }
 
 
-    private int buscaInserta(SQLiteDatabase db, String nombre) {
+    private int buscaInserta(SQLiteDatabase db, String name) {
         Cursor cursor = db.rawQuery("SELECT usu_id FROM usuarios "
-                + "WHERE nombre='" + nombre + "'", null);
+                + "WHERE nombre='" + name + "'", null);
         if (cursor.moveToNext()) {
             int result = cursor.getInt(0);
             cursor.close();
             return result;
         } else {
             cursor.close();
-            db.execSQL("INSERT INTO usuarios VALUES (null, '" + nombre
+            db.execSQL("INSERT INTO usuarios VALUES (null, '" + name
                     + "', 'correo@dominio.es')");
-            return buscaInserta(db, nombre);
+            return buscaInserta(db, name);
         }
     }
 }
