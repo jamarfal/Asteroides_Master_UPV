@@ -27,7 +27,7 @@ public class PointsStorageSocket implements PointsStorage {
     @Override
     public void saveScore(int points, String name, long date) {
         try {
-            Socket sk = new Socket(SERVER, 1234);
+            Socket sk = new Socket(SERVER, PORT);
             BufferedReader input = new BufferedReader(
                     new InputStreamReader(sk.getInputStream()));
             PrintWriter output = new PrintWriter(
