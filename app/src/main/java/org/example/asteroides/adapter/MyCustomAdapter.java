@@ -8,6 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+
+import org.example.asteroides.MainActivity;
 import org.example.asteroides.R;
 
 import java.util.Vector;
@@ -42,17 +46,20 @@ public class MyCustomAdapter extends RecyclerView.Adapter<MyCustomAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int i) {
         holder.title.setText(list.get(i));
-        switch (Math.round((float) Math.random() * 3)) {
-            case 0:
-                holder.icon.setImageResource(R.drawable.asteroide);
-                break;
-            case 1:
-                holder.icon.setImageResource(R.drawable.asteroide_1);
-                break;
-            default:
-                holder.icon.setImageResource(R.drawable.asteroide_2);
-                break;
-        }
+//        switch (Math.round((float) Math.random() * 3)) {
+//            case 0:
+//                holder.icon.setImageResource(R.drawable.asteroide);
+//                break;
+//            case 1:
+//                holder.icon.setImageResource(R.drawable.asteroide_1);
+//                break;
+//            default:
+//                holder.icon.setImageResource(R.drawable.asteroide_2);
+//                break;
+//        }
+
+//        MainActivity.lectorImagenes.get("http://mmoviles.upv.es/img/moviles.png", ImageLoader.getImageListener(holder.icon, R.drawable.asteroide1, R.drawable.asteroide3));
+        holder.icon.setImageUrl("http://mmoviles.upv.es/img/moviles.png", MainActivity.lectorImagenes);
     }
 
 
@@ -63,13 +70,13 @@ public class MyCustomAdapter extends RecyclerView.Adapter<MyCustomAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView title, subtitle;
-        public ImageView icon;
+        public NetworkImageView icon;
 
         ViewHolder(View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.title_text_view);
             subtitle = (TextView) itemView.findViewById(R.id.subtitle_text_view);
-            icon = (ImageView) itemView.findViewById(R.id.icon);
+            icon = (NetworkImageView) itemView.findViewById(R.id.icon);
         }
     }
 }

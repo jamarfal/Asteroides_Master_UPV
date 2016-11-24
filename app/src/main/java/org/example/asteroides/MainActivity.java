@@ -10,6 +10,7 @@ import android.gesture.GestureLibraries;
 import android.gesture.GestureLibrary;
 import android.gesture.GestureOverlayView;
 import android.gesture.Prediction;
+import android.graphics.Bitmap;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -17,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.LruCache;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +28,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.Volley;
 
 import org.example.asteroides.logic.PointsStorageExternalFile;
 import org.example.asteroides.logic.PoinstStorageExternalFileApi8;
@@ -66,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     private GamePreferences gamePreferences;
     private int score;
     private final int[] STORE_FILE_MODES = {2, 3, 4, 7, 8, 9};
+    public static RequestQueue colaPeticiones;
+    public static ImageLoader lectorImagenes;
 
 
     //region Life Cycle methods
@@ -91,6 +99,20 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
         }
 
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().permitNetwork().build());
+
+        colaPeticiones = Volley.newRequestQueue(this);
+        lectorImagenes = new ImageLoader(colaPeticiones,
+                new ImageLoader.ImageCache() {
+                    private final LruCache<String, Bitmap> cache = new LruCache<String, Bitmap>(10);
+
+                    public void putBitmap(String url, Bitmap bitmap) {
+                        cache.put(url, bitmap);
+                    }
+
+                    public Bitmap getBitmap(String url) {
+                        return cache.get(url);
+                    }
+                });
     }
 
     @Override
