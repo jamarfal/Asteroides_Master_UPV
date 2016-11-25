@@ -8,12 +8,16 @@ import android.view.View;
 import android.widget.Toast;
 
 import org.example.asteroides.adapter.MyCustomAdapter;
+import org.example.asteroides.logic.DowloaderScore;
 
-public class ScoreActivity extends AppCompatActivity {
+import java.util.Vector;
+
+public class ScoreActivity extends AppCompatActivity implements DowloaderScore {
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private MyCustomAdapter myCustomAdapter;
+    private Vector<String> scoreList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +28,8 @@ public class ScoreActivity extends AppCompatActivity {
 
     private void configView() {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        myCustomAdapter = new MyCustomAdapter(this, MainActivity.pointsStorage.scoreList(10));
+        MainActivity.pointsStorage.scoreList(10, this);
+        myCustomAdapter = new MyCustomAdapter(this, scoreList);
         myCustomAdapter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -38,8 +43,13 @@ public class ScoreActivity extends AppCompatActivity {
 
     private void showScore(View v) {
         int pos = recyclerView.getChildAdapterPosition(v);
-        String score = MainActivity.pointsStorage.scoreList(10).get(pos);
+        String score = scoreList.get(pos);
         Toast.makeText(ScoreActivity.this, "Selección: " + pos
                 + " - " + score, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void OnDowloadScoreComplete(Vector<String> scoreList) {
+        this.scoreList = scoreList;
     }
 }

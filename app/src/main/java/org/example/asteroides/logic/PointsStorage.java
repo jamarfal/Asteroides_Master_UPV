@@ -10,5 +10,7 @@ public interface PointsStorage {
 
     public void saveScore(int points, String name, long date);
 
-    public Vector<String> scoreList(int amount);
+//    public Vector<String> scoreList(int amount);
+
+    public void scoreList(int amount, DowloaderScore dowloaderScore);
 }
