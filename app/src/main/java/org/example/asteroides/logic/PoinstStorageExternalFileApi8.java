@@ -18,7 +18,7 @@ import java.util.Vector;
  */
 
 public class PoinstStorageExternalFileApi8 implements PointsStorage {
-    private static String FILE = Environment.getExternalStorageDirectory() + "/Android/data/org.example.asteroides/files/puntuaciones.txt";
+    private static String FILE = Environment.getExternalStorageDirectory() + "/Android/data/org.example.asteroides/files/puntuaciones_api8.txt";
     private Context context;
 
     public PoinstStorageExternalFileApi8(Context context) {
