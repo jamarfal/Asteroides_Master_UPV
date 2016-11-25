@@ -18,7 +18,7 @@ import java.util.Vector;
  */
 
 public class PointsStorageExternalFile implements PointsStorage {
-    private static String FILE = Environment.getExternalStorageDirectory() + "/puntuaciones.txt";
+    private static String FILE = Environment.getExternalStorageDirectory() + "/puntuaciones_externa.txt";
     private Context context;
 
     public PointsStorageExternalFile(Context context) {

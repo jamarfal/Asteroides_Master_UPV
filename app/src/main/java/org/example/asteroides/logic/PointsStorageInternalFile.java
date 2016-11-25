@@ -15,7 +15,7 @@ import java.util.Vector;
  */
 
 public class PointsStorageInternalFile implements PointsStorage {
-    private static String FILE_NAME = "puntuaciones.txt";
+    private static String FILE_NAME = "puntuaciones_internal.txt";
     private Context context;
 
     public PointsStorageInternalFile(Context context) {
@@ -27,8 +27,8 @@ public class PointsStorageInternalFile implements PointsStorage {
         FileOutputStream f = null;
         try {
             f = context.openFileOutput(FILE_NAME, Context.MODE_APPEND);
-            String texto = points + " " + name + "\n";
-            f.write(texto.getBytes());
+            String text = points + " " + name + "\n";
+            f.write(text.getBytes());
         } catch (Exception e) {
             Log.e("Asteroides", e.getMessage(), e);
         } finally {
