@@ -1,16 +1,14 @@
 package org.example.asteroides.logic;
 
-import java.util.Vector;
-
 /**
  * Created by jamarfal on 4/10/16.
  */
 
 public interface PointsStorage {
 
-    public void saveScore(int points, String name, long date);
+    public void storeScore(int points, String name, long date, StorageOperations storageOperations);
 
-//    public Vector<String> scoreList(int amount);
+    public void getScore(int amount, StorageOperations storageOperations);
 
-    public void scoreList(int amount, DowloaderScore dowloaderScore);
+
 }

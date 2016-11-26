@@ -25,14 +25,13 @@ import javax.xml.parsers.SAXParserFactory;
  * Created by jamarfal on 14/11/16.
  */
 
-public class PointsStorageXML_SAX implements PointsStorage {
+public class PointsStorageXML_SAX extends PointsStorageBase {
     private static String FILE = "puntuaciones.xml";
-    private Context context;
     private ScoreList scoreList;
     private boolean loadedList;
 
     public PointsStorageXML_SAX(Context context) {
-        this.context = context;
+        super(context);
         scoreList = new ScoreList();
         loadedList = false;
     }

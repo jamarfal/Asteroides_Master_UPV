@@ -79,4 +79,10 @@ public class MyCustomAdapter extends RecyclerView.Adapter<MyCustomAdapter.ViewHo
             icon = (NetworkImageView) itemView.findViewById(R.id.icon);
         }
     }
+
+
+    public void setList(Vector<String> list) {
+        this.list = list;
+        notifyDataSetChanged();
+    }
 }

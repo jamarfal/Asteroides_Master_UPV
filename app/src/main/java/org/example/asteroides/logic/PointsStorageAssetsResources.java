@@ -15,10 +15,11 @@ import java.util.Vector;
  * Created by jamarfal on 9/11/16.
  */
 
-public class PointsStorageAssetsResources implements PointsStorage {
+public class PointsStorageAssetsResources extends PointsStorageBase {
     private Context context;
 
     public PointsStorageAssetsResources(Context context) {
+        super(context);
         this.context = context;
     }
 

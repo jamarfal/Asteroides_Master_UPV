@@ -17,12 +17,11 @@ import java.util.Vector;
  * Created by jamarfal on 9/11/16.
  */
 
-public class PointsStorageExternalFile implements PointsStorage {
+public class PointsStorageExternalFile extends PointsStorageBase {
     private static String FILE = Environment.getExternalStorageDirectory() + "/puntuaciones_externa.txt";
-    private Context context;
 
     public PointsStorageExternalFile(Context context) {
-        this.context = context;
+        super(context);
     }
 
     @Override

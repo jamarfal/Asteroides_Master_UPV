@@ -1,16 +1,20 @@
 package org.example.asteroides.logic;
 
+import android.content.Context;
+import android.graphics.Point;
+
 import java.util.Vector;
 
 /**
  * Created by jamarfal on 4/10/16.
  */
 
-public class PointsStorageArray implements PointsStorage {
+public class PointsStorageArray extends PointsStorageBase {
 
     private Vector<String> scores;
 
-    public PointsStorageArray() {
+    public PointsStorageArray(Context context) {
+        super(context);
         this.scores = new Vector<String>();
         addDumpData();
     }

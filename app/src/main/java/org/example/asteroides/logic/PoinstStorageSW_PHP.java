@@ -1,6 +1,8 @@
 package org.example.asteroides.logic;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -8,21 +10,23 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Vector;
+import java.util.concurrent.CancellationException;
 
 /**
  * Created by jamarfal on 21/11/16.
  */
 
-public class PoinstStorageSW_PHP implements PointsStorage {
+public class PoinstStorageSW_PHP extends PointsStorageBase {
 
     private String serverUrl = "http://158.42.146.127/puntuaciones/";
 
-    public PoinstStorageSW_PHP(String serverUrl) {
+    public PoinstStorageSW_PHP(Context context, String serverUrl) {
+        super(context);
         this.serverUrl = serverUrl;
     }
 
     @Override
-    public Vector<String> scoreList(int amount) {
+    protected Vector<String> scoreList(int amount) {
         Vector<String> result = new Vector<String>();
 
         HttpURLConnection connection = null;

@@ -30,10 +30,9 @@ public class PointsStorageSqlite extends SQLiteOpenHelper implements PointsStora
         // En caso de una nueva versión habría que actualizar las tablas
     }
 
-    //Métodos de AlmacenPuntuaciones
+
     @Override
-    public void saveScore(int points, String name,
-                          long date) {
+    public void storeScore(int points, String name, long date, StorageOperations storageOperations) {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("INSERT INTO puntuaciones VALUES ( null, " +
                 points + ", '" + name + "', " + date + ")");
@@ -41,7 +40,7 @@ public class PointsStorageSqlite extends SQLiteOpenHelper implements PointsStora
     }
 
     @Override
-    public Vector<String> scoreList(int amount) {
+    public void getScore(int amount, StorageOperations storageOperations) {
         Vector<String> result = new Vector<String>();
         SQLiteDatabase db = getReadableDatabase();
         String[] FIELDS = {"puntos", "nombre"};
@@ -52,6 +51,6 @@ public class PointsStorageSqlite extends SQLiteOpenHelper implements PointsStora
         }
         cursor.close();
         db.close();
-        return result;
+        storageOperations.OnDowloadScoreComplete(result);
     }
 }

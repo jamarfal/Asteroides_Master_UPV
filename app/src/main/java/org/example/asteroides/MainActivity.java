@@ -49,12 +49,15 @@ import org.example.asteroides.logic.PointsStorageSW_PHP_Asynctask;
 import org.example.asteroides.logic.PointsStorage;
 import org.example.asteroides.logic.PointsStorageArray;
 import org.example.asteroides.logic.PointsStorageXML_SAX;
+import org.example.asteroides.logic.StorageOperations;
+import org.example.asteroides.logic.StorageProvider;
 import org.example.asteroides.preferences.GamePreferences;
 import org.example.asteroides.service.ServicioMusica;
 import org.example.asteroides.view.GameView;
 
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity implements GestureOverlayView.OnGesturePerformedListener {
 
@@ -72,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     private GamePreferences gamePreferences;
     private int score;
     private final int[] STORE_FILE_MODES = {2, 3, 4, 7, 8, 9};
+    private StorageProvider storageProvider;
     public static RequestQueue colaPeticiones;
     public static ImageLoader lectorImagenes;
 
@@ -93,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
         startAnimations();
 
         gamePreferences = new GamePreferences(this);
+        storageProvider = new StorageProvider();
 
         if (gamePreferences.playMusic()) {
             initMusic();
@@ -126,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
         if (gamePreferences.playMusic())
             initMusic();
 
-        initSaveMethod();
+        pointsStorage = storageProvider.createStorage(gamePreferences.getSaveMethod(), this);
     }
 
 
@@ -259,60 +264,6 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
         asteroidInRotation.startAnimation(loopRotation);
     }
 
-    private void initSaveMethod() {
-        int saveMethodType = gamePreferences.getSaveMethod();
-        switch (saveMethodType) {
-            case 0:
-                pointsStorage = new PointsStorageArray();
-                break;
-            case 1:
-                pointsStorage = new PointsStoragePreferences(this);
-                break;
-            case 2:
-                pointsStorage = new PointsStorageInternalFile(this);
-                break;
-            case 3:
-                pointsStorage = new PointsStorageExternalFile(this);
-                break;
-            case 4:
-                pointsStorage = new PoinstStorageExternalFileApi8(this);
-                break;
-            case 5:
-                pointsStorage = new PointsStorageRawResources(this);
-                break;
-            case 6:
-                pointsStorage = new PointsStorageAssetsResources(this);
-                break;
-            case 7:
-                pointsStorage = new PointsStorageXML_SAX(this);
-                break;
-            case 8:
-                pointsStorage = new PointsStorageGson(this);
-                break;
-            case 9:
-                pointsStorage = new PoinstStorageJson(this);
-                break;
-            case 10:
-                pointsStorage = new PointsStorageSqliteRel(this);
-                break;
-            case 11:
-                pointsStorage = new PointsStorageProvider(this);
-                break;
-            case 12:
-                pointsStorage = new PointsStorageSocket();
-                break;
-            case 13:
-                pointsStorage = new PoinstStorageSW_PHP("http://158.42.146.127/puntuaciones/");
-                break;
-            case 14:
-                pointsStorage = new PoinstStorageSW_PHP("http://asteroides.esy.es/asteroides/");
-                break;
-            case 15:
-                pointsStorage = new PointsStorageSW_PHP_Asynctask(this, "http://asteroides.esy.es/asteroides/");
-                break;
-        }
-    }
-
     private void initMusic() {
         startService(new Intent(MainActivity.this, ServicioMusica.class));
     }
@@ -438,8 +389,18 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     //endregion
 
     private void saveScore() {
-        pointsStorage.saveScore(score, gamePreferences.getUserName(), System.currentTimeMillis());
-        throwScoreActivity(null);
+        pointsStorage.storeScore(score, gamePreferences.getUserName(), System.currentTimeMillis(), new StorageOperations() {
+            @Override
+            public void OnDowloadScoreComplete(Vector<String> scoreList) {
+
+            }
+
+            @Override
+            public void OnSaveScoreComplete() {
+                throwScoreActivity(null);
+            }
+        });
+
     }
 
     public boolean shouldRequestWriteExternalStoragePermission() {

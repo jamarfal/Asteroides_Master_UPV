@@ -22,7 +22,7 @@ import java.util.Vector;
  * Created by jamarfal on 14/11/16.
  */
 
-public class PointsStorageGson implements PointsStorage {
+public class PointsStorageGson extends PointsStorageBase {
 
     private String string;
     private ParserClass object = new ParserClass();
@@ -31,10 +31,9 @@ public class PointsStorageGson implements PointsStorage {
 
     private Type type = new TypeToken<ParserClass>() {
     }.getType();
-    private Context context;
 
     public PointsStorageGson(Context context) {
-        this.context = context;
+        super(context);
         this.object = getObjetoFromJson();
     }
 

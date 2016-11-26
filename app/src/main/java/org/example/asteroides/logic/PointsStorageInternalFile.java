@@ -14,12 +14,11 @@ import java.util.Vector;
  * Created by jamarfal on 9/11/16.
  */
 
-public class PointsStorageInternalFile implements PointsStorage {
+public class PointsStorageInternalFile extends PointsStorageBase {
     private static String FILE_NAME = "puntuaciones_internal.txt";
-    private Context context;
 
     public PointsStorageInternalFile(Context context) {
-        this.context = context;
+        super(context);
     }
 
     @Override

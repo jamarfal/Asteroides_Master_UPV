@@ -18,32 +18,24 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by jamarfal on 14/11/16.
  */
 
-public class PoinstStorageJson implements PointsStorage {
+public class PoinstStorageJson extends PointsStorageBase {
     private String string;
-    private Context context;
     private static String FILE = Environment.getExternalStorageDirectory() + "/puntuaciones_json.txt";
 
     public PoinstStorageJson(Context context) {
-        this.context = context;
+        super(context);
     }
 
     @Override
-    public void saveScore(int points, String name, long date) {
-        string = readString();
-        List<Puntuacion> scores = createJson();
-        scores.add(new Puntuacion(points, name, date));
-        string = saveJson(scores);
-        saveString();
-    }
-
-    @Override
-    public Vector<String> scoreList(int amount) {
-
+    protected Vector<String> scoreList(int amount) {
         string = readString();
         List<Puntuacion> scores = createJson();
 
@@ -53,6 +45,16 @@ public class PoinstStorageJson implements PointsStorage {
         }
         return output;
     }
+
+    @Override
+    protected void saveScore(int points, String name, long date) {
+        string = readString();
+        List<Puntuacion> scores = createJson();
+        scores.add(new Puntuacion(points, name, date));
+        string = saveJson(scores);
+        saveString();
+    }
+
 
     private String saveJson(List<Puntuacion> scores) {
         String string = "";

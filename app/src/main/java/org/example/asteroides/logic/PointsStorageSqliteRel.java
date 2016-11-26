@@ -47,28 +47,6 @@ public class PointsStorageSqliteRel extends SQLiteOpenHelper implements PointsSt
     }
 
     //Métodos de AlmacenPuntuaciones
-    @Override
-    public Vector<String> scoreList(int amou) {
-        Vector<String> result = new Vector<String>();
-        SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT puntos, nombre FROM "
-                + "puntuaciones2, usuarios WHERE usuario = usu_id ORDER BY "
-                + "puntos DESC LIMIT " + amou, null);
-        while (cursor.moveToNext()) {
-            result.add(cursor.getInt(0) + " " + cursor.getString(1));
-        }
-        cursor.close();
-        db.close();
-        return result;
-    }
-
-    @Override
-    public void saveScore(int points, String name, long date) {
-        SQLiteDatabase db = getWritableDatabase();
-        saveScore(db, points, name, date);
-        db.close();
-    }
-
     public void saveScore(SQLiteDatabase db, int points, String name, long date) {
         int usuario = buscaInserta(db, name);
         db.execSQL("PRAGMA foreign_keys = ON");
@@ -89,5 +67,27 @@ public class PointsStorageSqliteRel extends SQLiteOpenHelper implements PointsSt
                     + "', 'correo@dominio.es')");
             return buscaInserta(db, name);
         }
+    }
+
+    @Override
+    public void storeScore(int points, String name, long date, StorageOperations storageOperations) {
+        SQLiteDatabase db = getWritableDatabase();
+        saveScore(db, points, name, date);
+        db.close();
+    }
+
+    @Override
+    public void getScore(int amount, StorageOperations storageOperations) {
+        Vector<String> result = new Vector<String>();
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT puntos, nombre FROM "
+                + "puntuaciones2, usuarios WHERE usuario = usu_id ORDER BY "
+                + "puntos DESC LIMIT " + amount, null);
+        while (cursor.moveToNext()) {
+            result.add(cursor.getInt(0) + " " + cursor.getString(1));
+        }
+        cursor.close();
+        db.close();
+        storageOperations.OnDowloadScoreComplete(result);
     }
 }

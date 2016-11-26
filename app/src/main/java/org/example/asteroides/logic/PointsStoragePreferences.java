@@ -9,13 +9,14 @@ import java.util.Vector;
  * Created by jamarfal on 9/11/16.
  */
 
-public class PointsStoragePreferences implements PointsStorage {
+public class PointsStoragePreferences extends PointsStorageBase {
 
     private static String PREFERENCES = "puntuaciones";
-    private Context context;
+
 
     public PointsStoragePreferences(Context context) {
-        this.context = context;
+        super(context);
+
     }
 
     @Override

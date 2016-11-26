@@ -17,11 +17,10 @@ import java.util.Vector;
  * Created by jamarfal on 9/11/16.
  */
 
-public class PointsStorageRawResources implements PointsStorage {
-    private Context context;
+public class PointsStorageRawResources extends PointsStorageBase {
 
     public PointsStorageRawResources(Context context) {
-        this.context = context;
+        super(context);
     }
 
     @Override

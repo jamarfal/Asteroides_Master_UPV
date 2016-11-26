@@ -6,6 +6,8 @@ import java.util.Vector;
  * Created by jamarfal on 25/11/16.
  */
 
-public interface DowloaderScore {
+public interface StorageOperations {
     public void OnDowloadScoreComplete(Vector<String> scoreList);
+
+    public void OnSaveScoreComplete();
 }
