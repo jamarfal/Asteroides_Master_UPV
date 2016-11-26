@@ -5,6 +5,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import org.example.asteroides.logic.storage_operations.PointsStorage;
+import org.example.asteroides.logic.storage_operations.StorageOperations;
+
 import java.util.Vector;
 
 /**
@@ -12,6 +15,7 @@ import java.util.Vector;
  */
 
 public class PointsStorageSqlite extends SQLiteOpenHelper implements PointsStorage {
+
     public PointsStorageSqlite(Context context) {
         super(context, "puntuaciones", null, 1);
     }

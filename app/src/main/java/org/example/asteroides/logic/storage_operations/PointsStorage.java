@@ -1,4 +1,4 @@
-package org.example.asteroides.logic;
+package org.example.asteroides.logic.storage_operations;
 
 /**
  * Created by jamarfal on 4/10/16.

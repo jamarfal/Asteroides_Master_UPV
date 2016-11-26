@@ -1,6 +1,23 @@
-package org.example.asteroides.logic;
+package org.example.asteroides.logic.provider;
 
 import android.content.Context;
+
+import org.example.asteroides.logic.PoinstStorageExternalFileApi8;
+import org.example.asteroides.logic.PoinstStorageJson;
+import org.example.asteroides.logic.PoinstStorageSW_PHP;
+import org.example.asteroides.logic.PointsStorageArray;
+import org.example.asteroides.logic.PointsStorageAssetsResources;
+import org.example.asteroides.logic.PointsStorageExternalFile;
+import org.example.asteroides.logic.PointsStorageGson;
+import org.example.asteroides.logic.PointsStorageInternalFile;
+import org.example.asteroides.logic.PointsStoragePreferences;
+import org.example.asteroides.logic.PointsStorageProvider;
+import org.example.asteroides.logic.PointsStorageRawResources;
+import org.example.asteroides.logic.PointsStorageSW_PHP_Asynctask;
+import org.example.asteroides.logic.PointsStorageSocket;
+import org.example.asteroides.logic.PointsStorageSqliteRel;
+import org.example.asteroides.logic.PointsStorageXML_SAX;
+import org.example.asteroides.logic.storage_operations.PointsStorage;
 
 /**
  * Created by jamarfal on 26/11/16.

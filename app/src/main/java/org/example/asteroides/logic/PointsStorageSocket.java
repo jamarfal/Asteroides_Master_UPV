@@ -1,10 +1,9 @@
 package org.example.asteroides.logic;
 
 import android.content.Context;
-import android.os.AsyncTask;
-import android.os.StrictMode;
 import android.util.Log;
-import android.widget.Toast;
+
+import org.example.asteroides.logic.storage_operations.PointsStorageBase;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -12,7 +11,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Vector;
-import java.util.concurrent.CancellationException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -50,11 +48,6 @@ public class PointsStorageSocket extends PointsStorageBase {
             sk.close();
         } catch (Exception e) {
             Log.e("Asteroides", e.toString(), e);
-        }
-        try {
-            TimeUnit.SECONDS.sleep(5);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
         return result;
     }

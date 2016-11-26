@@ -18,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.LruCache;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,24 +34,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
-import org.example.asteroides.logic.PointsStorageExternalFile;
-import org.example.asteroides.logic.PoinstStorageExternalFileApi8;
-import org.example.asteroides.logic.PointsStorageInternalFile;
-import org.example.asteroides.logic.PointsStorageGson;
-import org.example.asteroides.logic.PoinstStorageJson;
-import org.example.asteroides.logic.PointsStoragePreferences;
-import org.example.asteroides.logic.PointsStorageProvider;
-import org.example.asteroides.logic.PointsStorageAssetsResources;
-import org.example.asteroides.logic.PointsStorageRawResources;
-import org.example.asteroides.logic.PointsStorageSocket;
-import org.example.asteroides.logic.PointsStorageSqliteRel;
-import org.example.asteroides.logic.PoinstStorageSW_PHP;
-import org.example.asteroides.logic.PointsStorageSW_PHP_Asynctask;
-import org.example.asteroides.logic.PointsStorage;
-import org.example.asteroides.logic.PointsStorageArray;
-import org.example.asteroides.logic.PointsStorageXML_SAX;
-import org.example.asteroides.logic.StorageOperations;
-import org.example.asteroides.logic.StorageProvider;
+import org.example.asteroides.logic.storage_operations.PointsStorage;
+import org.example.asteroides.logic.storage_operations.StorageOperations;
+import org.example.asteroides.logic.provider.StorageProvider;
+import org.example.asteroides.logic.storage_operations.StorageSingleton;
 import org.example.asteroides.preferences.GamePreferences;
 import org.example.asteroides.service.ServicioMusica;
 import org.example.asteroides.view.GameView;
@@ -59,7 +46,7 @@ import org.example.asteroides.view.GameView;
 import java.util.ArrayList;
 import java.util.Vector;
 
-public class MainActivity extends AppCompatActivity implements GestureOverlayView.OnGesturePerformedListener {
+public class MainActivity extends AppCompatActivity implements GestureOverlayView.OnGesturePerformedListener, StorageOperations {
 
     public static final String SONG_POSITION_TIME = "song_position_time";
     private static final int WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST = 1232;
@@ -71,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     private GestureOverlayView gestureOverlayView;
     Animation rotateAndZoom, appear, translationRight, translationLeft, zoomMaxMin, loopRotation;
     private GestureLibrary gestureLibrary;
-    public static PointsStorage pointsStorage;
     private GamePreferences gamePreferences;
     private int score;
     private final int[] STORE_FILE_MODES = {2, 3, 4, 7, 8, 9};
@@ -103,8 +89,6 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
             initMusic();
         }
 
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().permitNetwork().build());
-
         colaPeticiones = Volley.newRequestQueue(this);
         lectorImagenes = new ImageLoader(colaPeticiones,
                 new ImageLoader.ImageCache() {
@@ -131,7 +115,12 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
         if (gamePreferences.playMusic())
             initMusic();
 
-        pointsStorage = storageProvider.createStorage(gamePreferences.getSaveMethod(), this);
+        if (StorageSingleton.getInstance().getPointsStorage() == null) {
+            PointsStorage pointsStorage = storageProvider.createStorage(gamePreferences.getSaveMethod(), this);
+            StorageSingleton.getInstance().setPointsStorage(pointsStorage);
+        }
+
+
     }
 
 
@@ -187,6 +176,7 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
             }
         } else if (requestCode == READ_EXTERNAL_STORAGE_PERMISSION_REQUEST) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.i("Asteroides", "READ_EXTERNAL_STORAGE_PERMISSION_REQUEST");
                 goToScoreActivity();
             } else {
                 Toast.makeText(this, "Sin el permiso de escribir en la memoria externa no se pueden leer puntuaciones", Toast.LENGTH_LONG).show();
@@ -330,6 +320,7 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     }
 
     public void throwScoreActivity(View view) {
+        Log.i("Asteroides", "throwScoreActivity");
         if (shouldRequestWriteExternalStoragePermission()) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 goToScoreActivity();
@@ -345,6 +336,7 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     }
 
     private void goToScoreActivity() {
+        Log.i("Asteroides", "Lanza Puntuacion");
         Intent intent = new Intent(this, ScoreActivity.class);
         startActivity(intent);
     }
@@ -389,17 +381,11 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
     //endregion
 
     private void saveScore() {
-        pointsStorage.storeScore(score, gamePreferences.getUserName(), System.currentTimeMillis(), new StorageOperations() {
-            @Override
-            public void OnDowloadScoreComplete(Vector<String> scoreList) {
-
-            }
-
-            @Override
-            public void OnSaveScoreComplete() {
-                throwScoreActivity(null);
-            }
-        });
+        if (StorageSingleton.getInstance().getPointsStorage() == null) {
+            PointsStorage pointsStorage = storageProvider.createStorage(gamePreferences.getSaveMethod(), this);
+            StorageSingleton.getInstance().setPointsStorage(pointsStorage);
+        }
+        StorageSingleton.getInstance().getPointsStorage().storeScore(score, gamePreferences.getUserName(), System.currentTimeMillis(), this);
 
     }
 
@@ -414,6 +400,15 @@ public class MainActivity extends AppCompatActivity implements GestureOverlayVie
         return found;
     }
 
+    @Override
+    public void OnDowloadScoreComplete(Vector<String> scoreList) {
+
+    }
+
+    @Override
+    public void OnSaveScoreComplete() {
+        throwScoreActivity(null);
+    }
 }
 
 

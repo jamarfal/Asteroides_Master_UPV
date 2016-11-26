@@ -1,9 +1,9 @@
 package org.example.asteroides.logic;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
+
+import org.example.asteroides.logic.storage_operations.PointsStorageBase;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -11,9 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Vector;
-import java.util.concurrent.CancellationException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * Created by jamarfal on 21/11/16.
@@ -52,6 +50,12 @@ public class PointsStorageSW_PHP_Asynctask extends PointsStorageBase {
         } finally {
             if (connection != null) connection.disconnect();
         }
+
+        try {
+            TimeUnit.SECONDS.sleep(5);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return result;
     }
 
@@ -80,6 +84,12 @@ public class PointsStorageSW_PHP_Asynctask extends PointsStorageBase {
         } finally {
             if (conexion != null)
                 conexion.disconnect();
+        }
+
+        try {
+            TimeUnit.SECONDS.sleep(5);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }

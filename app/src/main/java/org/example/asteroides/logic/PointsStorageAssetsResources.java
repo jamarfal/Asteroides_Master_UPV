@@ -3,7 +3,7 @@ package org.example.asteroides.logic;
 import android.content.Context;
 import android.util.Log;
 
-import org.example.asteroides.R;
+import org.example.asteroides.logic.storage_operations.PointsStorageBase;
 
 import java.io.BufferedReader;
 import java.io.IOException;

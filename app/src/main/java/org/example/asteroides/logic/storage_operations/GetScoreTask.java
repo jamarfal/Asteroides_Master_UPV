@@ -1,4 +1,4 @@
-package org.example.asteroides.logic;
+package org.example.asteroides.logic.storage_operations;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -44,7 +44,8 @@ public class GetScoreTask extends AsyncTask<Integer, Void, Vector<String>> {
     @Override
     protected void onPostExecute(Vector<String> strings) {
         super.onPostExecute(strings);
-        progressDialog.dismiss();
+        if (progressDialog != null && progressDialog.isShowing())
+            progressDialog.dismiss();
         storageOperations.OnDowloadScoreComplete(strings);
     }
 }

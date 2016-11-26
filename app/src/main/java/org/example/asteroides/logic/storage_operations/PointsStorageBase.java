@@ -1,4 +1,4 @@
-package org.example.asteroides.logic;
+package org.example.asteroides.logic.storage_operations;
 
 import android.content.Context;
 import android.util.Log;
@@ -24,7 +24,8 @@ public abstract class PointsStorageBase implements PointsStorage {
     @Override
     public void storeScore(int points, String name, long date, StorageOperations storageOperations) {
         try {
-            SaveScoreTask task = new SaveScoreTask(this, storageOperations);
+            Log.i("Asteroides", "storeScore");
+            SaveScoreTask task = new SaveScoreTask(this, storageOperations, context);
             task.execute(String.valueOf(points), name, String.valueOf(date));
         } catch (CancellationException e) {
             Toast.makeText(context, "Error al conectar con servidor", Toast.LENGTH_LONG).show();

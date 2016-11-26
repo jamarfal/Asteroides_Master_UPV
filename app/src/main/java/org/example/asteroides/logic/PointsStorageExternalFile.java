@@ -5,6 +5,8 @@ import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.example.asteroides.logic.storage_operations.PointsStorageBase;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;

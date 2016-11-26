@@ -3,6 +3,8 @@ package org.example.asteroides.logic;
 import android.content.Context;
 import android.util.Log;
 
+import org.example.asteroides.logic.storage_operations.PointsStorageBase;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -23,8 +25,10 @@ public class PointsStorageInternalFile extends PointsStorageBase {
 
     @Override
     public void saveScore(int points, String name, long date) {
+        Log.i("Asteroides", "comienza salvado interno");
         FileOutputStream f = null;
         try {
+
             f = context.openFileOutput(FILE_NAME, Context.MODE_APPEND);
             String text = points + " " + name + "\n";
             f.write(text.getBytes());
@@ -32,6 +36,7 @@ public class PointsStorageInternalFile extends PointsStorageBase {
             Log.e("Asteroides", e.getMessage(), e);
         } finally {
             if (f != null) try {
+                Log.i("Asteroides", "Salvado interno completo");
                 f.close();
             } catch (IOException e) {
                 e.printStackTrace();

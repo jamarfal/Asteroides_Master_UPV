@@ -3,6 +3,8 @@ package org.example.asteroides.logic;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import org.example.asteroides.logic.storage_operations.PointsStorageBase;
+
 import java.util.Vector;
 
 /**

@@ -1,4 +1,4 @@
-package org.example.asteroides.logic;
+package org.example.asteroides.logic.storage_operations;
 
 import java.util.Vector;
 

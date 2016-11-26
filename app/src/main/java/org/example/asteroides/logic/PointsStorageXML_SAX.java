@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.util.Xml;
 
+import org.example.asteroides.logic.storage_operations.PointsStorageBase;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;

@@ -1,12 +1,13 @@
 package org.example.asteroides.logic;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
+
+import org.example.asteroides.logic.storage_operations.PointsStorageBase;
 
 import java.util.Vector;
 
